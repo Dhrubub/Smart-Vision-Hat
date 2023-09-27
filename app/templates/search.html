@@ -1,0 +1,43 @@
+{% extends "components/layout.html" %} {% block content %}
+<link
+	rel="stylesheet"
+	href="{{ url_for('static', filename='css/search.css') }}"
+/>
+
+<!-- Load icon library -->
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+<div class="loader-container">
+	<div class="loader"></div>
+</div>
+
+<div class="search-container">
+	<div class="textarea-answer-container typewriter" id="answerTextarea"></div>
+	<div class="textarea-container">
+		<textarea
+			id="inputTextarea"
+			rows="3"
+			placeholder="Ask me anything..."
+		></textarea>
+		<div class="send-btn" id="sendButton" onclick="senddata()">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 16 16"
+				fill="none"
+				class="h-4 w-4 m-1 md:m-0"
+				stroke-width="2"
+			>
+				<path
+					d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z"
+					fill="currentColor"
+				></path>
+			</svg>
+		</div>
+	</div>
+</div>
+
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+{% endblock %}

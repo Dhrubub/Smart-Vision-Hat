@@ -1,0 +1,33 @@
+/* Define CSS for the arrowhead symbols */
+.arrow-icon {
+	zindex: 1000; /* Ensure the arrowhead is on top of the PolyLine */
+}
+
+.arrow-head {
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	position: relative;
+}
+
+.arrow-head-start {
+	border-bottom: 10px solid blue; /* Color of the arrowhead */
+}
+
+.arrow-head-end {
+	border-top: 10px solid blue; /* Color of the arrowhead */
+}
+.map-container {
+	width: 80%;
+	height: 80%;
+	margin: auto;
+}
+#map-container {
+	width: 800px;
+	height: 600px;
+	margin: 0 auto; /* Center horizontally */
+	display: flex;
+	justify-content: center; /* Center horizontally */
+	align-items: center; /* Center vertically */
+}
