@@ -1,1 +1,66 @@
-{% extends "components/layout.html" %} {% block content %} {% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Vision Hat - Home</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    {% include 'components/nav_bar.html' %}
+
+    <div class="container mt-5">
+        <h1 class="text-center">Welcome to Smart Vision Hat</h1>
+        <p class="lead text-center">
+            Revolutionizing the way visually impaired individuals interact with their surroundings.
+        </p>
+
+        <hr>
+
+        <h2>Features</h2>
+
+        <div class="row">
+            <!-- Insight Snap Mode -->
+            <div class="col-md-4">
+                <h3>Insight Snap Mode</h3>
+                <p>Quickly identify objects in front of the user. Best suited for stationary users.</p>
+            </div>
+
+            <!-- Eyes-On Mode -->
+            <div class="col-md-4">
+                <h3>Eyes-On Mode</h3>
+                <p>Provides continuous visual feedback. Ideal for users on the move.</p>
+            </div>
+
+            <!-- Vision Assist Mode -->
+            <div class="col-md-4">
+                <h3>Vision Assist Mode</h3>
+                <p>Connect with a human assistant for immediate help in unfamiliar environments.</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="text-center">
+            <a href="{{ url_for('user_manual') }}" class="btn btn-primary">Learn More in the User Manual</a>
+            <a href="{{ url_for('system_log') }}" class="btn btn-secondary">Check System Log</a>
+        </div>
+    </div>
+
+    <footer class="mt-5">
+        {% include 'components/footer.html' %}
+    </footer>
+
+    <!-- JS Scripts -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+</body>
+</html>

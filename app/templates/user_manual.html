@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+
+<body>
+
+    {% include 'components/nav_bar.html' %}
+
+    
+
+    <div class="container mt-4">
+        <h1>User Manual</h1>
+
+        <section>
+            <h2>1. Insight Snap Mode:</h2>
+            <p>This mode is designed to quickly identify objects in front of the user.</p>
+            <ul>
+                <li><strong>a.</strong> Click the button.</li>
+                <li><strong>b.</strong> The camera takes pictures.</li>
+                <li><strong>c.</strong> The microcontroller and the software analyze the picture.</li>
+                <li><strong>d.</strong> Objects are detected, and the speaker announces the result.</li>
+            </ul>
+            <p>Note: This mode is best suited for stationary users who wish to identify objects in their immediate surroundings.</p>
+        </section>
+
+        <section>
+            <h2>2. Eyes-On Mode:</h2>
+            <p>This mode provides continuous visual feedback to the user.</p>
+            <ul>
+                <li><strong>a.</strong> Click the button.</li>
+                <li><strong>b.</strong> The camera continuously captures pictures.</li>
+                <li><strong>c.</strong> The microcontroller and the software analyze the pictures.</li>
+                <li><strong>d.</strong> Objects are detected, and the speaker announces the result.</li>
+            </ul>
+            <p>Note: This mode is ideal for users on the move. It provides real-time feedback about the user's surroundings.</p>
+        </section>
+
+        <section>
+            <h2>3. Vision Assist Mode:</h2>
+            <p>This mode connects the user with a human assistant for immediate help.</p>
+            <ul>
+                <li><strong>a.</strong> Click the button.</li>
+                <li><strong>b.</strong> A video call will be established between the vision-impaired individual and their chosen caretaker.</li>
+                <li><strong>c.</strong> The user can communicate with their caretaker using the built-in microphone to receive guidance.</li>
+            </ul>
+            <p>Note: This mode is designed for users who require human assistance in unfamiliar or complex environments.</p>
+        </section>
+    
+    </div>
+
+    <footer>
+        {% include 'components/footer.html' %}
+    </footer>
+
+    <!-- JS Scripts -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+</body>
+</html>

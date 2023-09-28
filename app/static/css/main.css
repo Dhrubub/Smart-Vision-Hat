@@ -1,0 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+form {
+    margin: 0 auto;
+    width: 200px;
+}
+
+label {
+    display: block;
+    margin-top: 20px;
+}
+
+input[type="text"], input[type="password"] {
+    margin-top: 5px;
+}
+
+input[type="submit"] {
+    margin-top: 20px;
+}
