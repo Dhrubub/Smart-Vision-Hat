@@ -1,0 +1,18 @@
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <span class="text-muted">
+            <a href="{{ url_for('about_us') }}">About Us</a> | <a href="{{ url_for('contact_us') }}">Contact Us</a>
+        </span>
+    </div>
+
+    <!-- Floating Chat Box -->
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header" onclick="toggleChat()">
+            <span>Ask us anything!</span>
+        </div>
+        <div class="chat-content" id="chatContent" style="display: none;">
+            <textarea placeholder="Type your question here..."></textarea>
+            <button>Send</button>
+        </div>
+    </div>
+</footer>

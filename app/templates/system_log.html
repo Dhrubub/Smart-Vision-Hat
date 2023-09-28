@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Log</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    {% include 'components/nav_bar.html' %}
+
+    <div class="container mt-4">
+        <h1 class="text-center">System Log</h1>
+        
+        <div class="d-flex justify-content-center">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Captured Image</th>
+                        <th>Recognized Object</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample data, you can loop through your log entries to generate rows -->
+                    <tr>
+                        <td><img src="{{ url_for('static', filename='path_to_image.jpg') }}" alt="Detected Image" class="img-fluid" style="max-width: 150px;"></td>
+                        <td>Detected Object Name</td>
+                    </tr>
+                    <!-- ... more rows as needed ... -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        {% include 'components/footer.html' %}
+    </footer>
+
+    <!-- JS Scripts -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+</body>
+</html>

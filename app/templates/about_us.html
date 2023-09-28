@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Us - Smart Vision Hat</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    {% include 'components/nav_bar.html' %}
+
+    <div class="container mt-4">
+        <h1>About Us</h1>
+        <p>We are Group 17 in CITS5506, and we are embarking on an IoT project.</p>
+
+        <h3>Why do we want to do this project?</h3>
+        <p>
+        We're living in this incredibly beautiful world, where our eyes are treated to ...
+        ... commitment to using innovation to improve individuals and society as a whole.
+        </p>
+
+        <h3>What is the problem we will solve? What benefit our solution will bring? What is its impact?</h3>
+        <ol>
+            <li>
+                <strong>Problems to solve:</strong>
+                <ul>
+                    <li><strong>Individual Problems:</strong>
+                        <ul>
+                            <li>Limited Environmental Awareness: ...</li>
+                            <li>...</li>
+                            <!-- Add other individual problems here -->
+                        </ul>
+                    </li>
+                    <li><strong>Social problems:</strong>
+                        <ul>
+                            <li>Inclusive Participation: ...</li>
+                            <li>...</li>
+                            <!-- Add other social problems here -->
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>Benefits:</strong>
+                <ul>
+                    <li><strong>Benefits for individual:</strong>
+                        <ul>
+                            <li>Enhanced Independence: ...</li>
+                            <li>...</li>
+                            <!-- Add other individual benefits here -->
+                        </ul>
+                    </li>
+                    <li><strong>Benefits for society:</strong>
+                        <ul>
+                            <li>Inclusivity: ...</li>
+                            <li>...</li>
+                            <!-- Add other societal benefits here -->
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>Impact:</strong>
+                <ul>
+                    <li>Wide-reaching Impact due to Large Population: ...</li>
+                    <li>...</li>
+                    <!-- Add other impacts here -->
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    {% include 'components/footer.html' %}
+
+    <!-- JS Scripts -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+</body>
+</html>
