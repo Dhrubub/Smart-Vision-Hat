@@ -1,95 +1,62 @@
-from ultralytics import YOLO
 import cv2
-import cvzone
-import random
-# import math
 import json
-import os
 
+# Load YOLO model
+net = cv2.dnn.readNet('./yolov3.weights', './yolov3.cfg')
 
+# Load class names from your config file
 with open('config.json') as config_file:
     config = json.load(config_file)
+    classNames = config["classes"]["classNames"]
 
+# Open video capture
 cap = cv2.VideoCapture(config["videoCapture"]["device"])
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, config["videoCapture"]["width"])
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, config["videoCapture"]["height"])
 
-model = YOLO(config["paths"]["model_Path"])
-
-classNames = config["classes"]["classNames"]
-
-
 if cap.isOpened():
     while True:
         ret, frame = cap.read()
-        results = model(frame, stream=True)
+        
+        # Prepare the frame for YOLO object detection
+        blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+        net.setInput(blob)
 
-        target = {
-            "w": 0,
-            "h": 0,
-            "bbox": (0, 0, 0, 0),
-            'box': None,
-            'conff': 0,
-        }
-        for r in results:
-            boxes = r.boxes
-            
-            if not len(boxes):
-                target = {
-                    "w": 0,
-                    "h": 0,
-                    "bbox": (0, 0, 0, 0),
-                    'box': None,
-                    'conff': 0,
-                }
+        # Perform object detection
+        detections = net.forward()
 
-            for box in boxes:
-                # Bounding box
+        # Loop through detected objects
+        for detection in detections:
+            for obj in detection:
+                # Get bounding box coordinates
+                x, y, width, height = obj[0:4]
+                x = int(x * frame.shape[1])
+                y = int(y * frame.shape[0])
+                width = int(width * frame.shape[1])
+                height = int(height * frame.shape[0])
 
-                x1, y1, x2, y2 = box.xyxy[0]
-                w, h = int(x2) - int(x1), int(y2) - int(y1)
-                bbox = int(x1), int(y1), int(w), int(h)
+                # Get class scores starting from index 5
+                class_scores = obj[5:]
 
-                conff = round(float(box.conf[0]), 2)
+                # Find the class with the highest score
+                class_id = class_scores.argmax()
 
-                if (w*h > target['w'] * target['h'] or target['conff'] < conff):
-                    target['w'] = w
-                    target['h'] = h
-                    target['bbox'] = bbox
-                    target['box'] = box
-                    target['conff'] = conff
+                # Get the confidence score
+                confidence = class_scores[class_id]
 
+                # Check if the detection confidence is above a certain threshold (e.g., 0.5)
+                if confidence > 0.5:
+                    # Draw bounding box and label
+                    color = (0, 255, 0)  # Green color
+                    cv2.rectangle(frame, (x, y), (x + width, y + height), color, 2)
+                    cv2.putText(frame, classNames[class_id], (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-            if target['box']:
-                cvzone.cornerRect(frame, target['bbox'], l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
-                                    colorR=tuple(config["rectSetup"]["rectColor"]))
-
-                # Confidence
-
-                # confidence = math.ceil((box.conf[0] * 100)) / 100
-                conff = round(float(target['box'].conf[0]), 2)
-
-                # Class name
-                cls = target['box'].cls[0]
-                crClass = classNames[int(cls)]
-                cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
-                                    scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
-                                    offset=config["textSetup"]["offset"])
-
-
-
+        # Display the frame with detections
+        cv2.imshow("Video", frame)
 
         key = cv2.waitKey(1)
-        cv2.imshow("Video", frame)
-        if key == ord("w"):
-            # cv2.imwrite(config["paths"]["saved_Images_path"] + "/saved_Image_{}.jpg".format(str(random.random())), frame)
-            pass
-        elif key == ord("q"):
+        if key == ord("q"):
             break
-        else:
-            continue
-
-
 
 cap.release()
 cv2.destroyAllWindows()
