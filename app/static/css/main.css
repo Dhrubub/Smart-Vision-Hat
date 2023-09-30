@@ -1,3 +1,11 @@
+/* Custom styles can go here. Bootstrap will handle most of the styling. */
+/* #camera_display, #audio_feedback {
+    height: 300px;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 300px;
+} */
+
 body {
     font-family: Arial, sans-serif;
 }
