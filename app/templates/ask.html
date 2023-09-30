@@ -1,0 +1,45 @@
+<head>
+    {% if title %}
+        <title>{{ title }} - Ask Us</title>
+    {% else %}
+        <title>Welcome to Smart Vision Hat!</title>
+    {% endif %}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    {% include 'components/nav_bar.html' %}
+
+    <div class="container mt-4">
+        <h2>Ask GPT-4</h2>
+        <textarea id="question" placeholder="Type your question..."></textarea>
+        <button onclick="getAnswer()">Ask</button>
+        <div>
+            <h3>Answer:</h3>
+            <p id="answer"></p>
+        </div>
+    </div>
+    
+
+    <script>
+        function getAnswer() {
+            let question = document.getElementById("question").value;
+            fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    question: question
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("answer").textContent = data.answer;
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,16 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import requests
+import os
+
+OPENAI_API_KEY = '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'
+OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
+
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {OPENAI_API_KEY}"
+}
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -14,31 +24,54 @@ class User(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', title='Smart Vision Hat')
 
 @app.route('/home')
 def index2():
-    return render_template('home.html')
+    return render_template('home.html', title='Smart Vision Hat')
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    return render_template('settings.html', title='Smart Vision Hat')
 
 @app.route('/user_manual')
 def user_manual():
-    return render_template('user_manual.html')
+    return render_template('user_manual.html', title='Smart Vision Hat')
 
 @app.route('/system_log')
 def system_log():
-    return render_template('system_log.html')
+    return render_template('system_log.html', title='Smart Vision Hat')
 
 @app.route('/about_us')
 def about_us():
-    return render_template('about_us.html')
+    return render_template('about_us.html', title='Smart Vision Hat')
 
 @app.route('/contact_us')
 def contact_us():
-    return render_template('contact_us.html')
+    return render_template('contact_us.html', title='Smart Vision Hat')
+
+@app.route('/ask_page')
+def ask_page():
+    return render_template('ask.html', title='Smart Vision Hat')
+
+@app.route('/ask', methods=['POST'])
+def ask():
+    question = request.json.get('question')
+    data = {
+        "model": "gpt-4.0-turbo",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": question}
+        ]
+    }
+    response = requests.post(OPENAI_ENDPOINT, headers=headers, json=data)
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to get response from OpenAI", "details": response.json()})
+    response_data = response.json()
+    
+    answer = response_data['choices'][0]['message']['content']
+    return jsonify({"answer": answer})
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
