@@ -1,17 +1,6 @@
-<head>
-    {% if title %}
-        <title>{{ title }} - Ask Us</title>
-    {% else %}
-        <title>Welcome to Smart Vision Hat!</title>
-    {% endif %}
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
+{% extends "components/base.html" %}
 
-<body>
-
-    {% include 'components/nav_bar.html' %}
-
+{% block content %}
     <div class="container mt-4">
         <h2>Ask GPT-4</h2>
         <textarea id="question" placeholder="Type your question..."></textarea>
@@ -21,7 +10,6 @@
             <p id="answer"></p>
         </div>
     </div>
-    
 
     <script>
         function getAnswer() {
@@ -41,5 +29,4 @@
             });
         }
     </script>
-</body>
-</html>
+{% endblock %}
