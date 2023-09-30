@@ -24,35 +24,35 @@ class User(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('index.html', title='Smart Vision Hat')
+    return render_template('index.html', title='Smart Vision Hat', page_name='Home')
 
 @app.route('/home')
 def index2():
-    return render_template('home.html', title='Smart Vision Hat')
+    return render_template('home.html', title='Smart Vision Hat', page_name='Home')
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html', title='Smart Vision Hat')
+    return render_template('settings.html', title='Smart Vision Hat', page_name='Home')
 
 @app.route('/user_manual')
 def user_manual():
-    return render_template('user_manual.html', title='Smart Vision Hat')
+    return render_template('user_manual.html', title='Smart Vision Hat', page_name='User Manual')
 
 @app.route('/system_log')
 def system_log():
-    return render_template('system_log.html', title='Smart Vision Hat')
+    return render_template('system_log.html', title='Smart Vision Hat', page_name='System Log')
 
 @app.route('/about_us')
 def about_us():
-    return render_template('about_us.html', title='Smart Vision Hat')
+    return render_template('about_us.html', title='Smart Vision Hat', page_name='About Us')
 
 @app.route('/contact_us')
 def contact_us():
-    return render_template('contact_us.html', title='Smart Vision Hat')
+    return render_template('contact_us.html', title='Smart Vision Hat', page_name='Contact Us')
 
 @app.route('/ask_page')
 def ask_page():
-    return render_template('ask.html', title='Smart Vision Hat')
+    return render_template('ask.html', title='Smart Vision Hat', page_name='Ask')
 
 @app.route('/ask', methods=['POST'])
 def ask():
