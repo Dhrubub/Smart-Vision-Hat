@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 import os
 
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = ''
 OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
 
 headers = {
