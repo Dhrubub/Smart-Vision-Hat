@@ -88,7 +88,7 @@ def ask():
         instructions = """The above given text is the user manual of our product: Smart Vision Hat.
         And the following text is the questions raised by our user, please answer the questions based on the user manual."""
         
-        prompt = f"{instructions}\nQ: {question}\nA:"
+        prompt = f"{user_manual}\n{instructions}\nQ: {question}\nA:"
         data = {
             "model": "gpt-3.5-turbo",
             "messages": [
