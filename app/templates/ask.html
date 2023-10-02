@@ -1,32 +1,14 @@
 {% extends "components/base.html" %}
 
 {% block content %}
-    <div class="container mt-4">
-        <h2>Ask GPT-4</h2>
-        <textarea id="question" placeholder="Type your question..."></textarea>
-        <button onclick="getAnswer()">Ask</button>
-        <div>
+    <div class="container mt-4" role="main">
+        <h2>Ask anything regarding our product!</h2>
+        <textarea id="question" placeholder="Type your question..." aria-label="Question input"></textarea>
+        <button onclick="getAnswer()" aria-label="Ask button">Ask</button>
+        <div id="loading" style="display:none;">Loading...</div>
+        <div role="region" aria-live="polite">
             <h3>Answer:</h3>
             <p id="answer"></p>
         </div>
     </div>
-
-    <script>
-        function getAnswer() {
-            let question = document.getElementById("question").value;
-            fetch('/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    question: question
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("answer").textContent = data.answer;
-            });
-        }
-    </script>
 {% endblock %}
