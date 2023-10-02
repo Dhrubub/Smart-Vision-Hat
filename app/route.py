@@ -3,14 +3,18 @@ from flask import render_template, jsonify, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 import os
+from dotenv import load_dotenv
 
-OPENAI_API_KEY = ''
+load_dotenv()
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
 
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {OPENAI_API_KEY}"
 }
+
+# app = Flask(__name__)
 
 
 class User(db.Model):
@@ -52,21 +56,54 @@ def ask_page():
 
 @app.route('/ask', methods=['POST'])
 def ask():
-    question = request.json.get('question')
-    data = {
-        "model": "gpt-4.0-turbo",
-        "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": question}
-        ]
-    }
-    response = requests.post(OPENAI_ENDPOINT, headers=headers, json=data)
-    if response.status_code != 200:
-        return jsonify({"error": "Failed to get response from OpenAI", "details": response.json()})
-    response_data = response.json()
-    
-    answer = response_data['choices'][0]['message']['content']
-    return jsonify({"answer": answer})
+    try:
+        question = request.json.get('question')
+        user_manual = """User Manual
+        1. Insight Snap Mode:
+        This mode is designed to quickly identify objects in front of the user.
+
+        a. Click the button.
+        b. The camera takes pictures.
+        c. The microcontroller and the software analyze the picture.
+        d. Objects are detected, and the speaker announces the result.
+        Note: This mode is best suited for stationary users who wish to identify objects in their immediate surroundings.
+
+        2. Eyes-On Mode:
+        This mode provides continuous visual feedback to the user.
+
+        a. Click the button.
+        b. The camera continuously captures pictures.
+        c. The microcontroller and the software analyze the pictures.
+        d. Objects are detected, and the speaker announces the result.
+        Note: This mode is ideal for users on the move. It provides real-time feedback about the user's surroundings.
+
+        3. Vision Assist Mode:
+        This mode connects the user with a human assistant for immediate help.
+
+        a. Click the button.
+        b. A video call will be established between the vision-impaired individual and their chosen caretaker.
+        c. The user can communicate with their caretaker using the built-in microphone to receive guidance.
+        Note: This mode is designed for users who require human assistance in unfamiliar or complex environments."""
+
+        instructions = """The above given text is the user manual of our product: Smart Vision Hat.
+        And the following text is the questions raised by our user, please answer the questions based on the user manual."""
+        
+        prompt = f"{instructions}\nQ: {question}\nA:"
+        data = {
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        }
+        response = requests.post(OPENAI_ENDPOINT, headers=headers, json=data)
+        response.raise_for_status()
+        answer = response.json()['choices'][0]['message']['content']
+        return jsonify({"answer": answer})
+    except Exception as e:
+        print(f"Error: {e}")  # log the error
+        return jsonify({"error": "Internal Server Error"}), 500
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
