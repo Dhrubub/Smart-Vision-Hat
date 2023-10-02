@@ -54,6 +54,39 @@ function sendMessage() {
     });
 }
 
+function getAnswer() {
+    let question = document.getElementById("question").value;
+    let loading = document.getElementById("loading");
+    let answer = document.getElementById("answer");
+    loading.style.display = "block";
+    answer.textContent = "";
+    
+    fetch('/ask', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            question: question
+        })
+    })
+    .then(response => {
+        loading.style.display = "none";
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Network response was not ok');
+        }
+    })
+    .then(data => {
+        answer.textContent = data.answer;
+    })
+    .catch(error => {
+        answer.textContent = "Error: " + error;
+    });
+}
+
+
 // Attach the sendMessage function to the "Send" button
 document.querySelector('.chat-content button').addEventListener('click', sendMessage);
 
