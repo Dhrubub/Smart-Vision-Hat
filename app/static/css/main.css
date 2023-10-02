@@ -1,15 +1,15 @@
-/* Custom styles can go here. Bootstrap will handle most of the styling. */
-/* #camera_display, #audio_feedback {
-    height: 300px;
-    border: 1px solid #ccc;
-    text-align: center;
-    line-height: 300px;
-} */
-
-body {
+/* General Styles */
+body, html {
     font-family: Arial, sans-serif;
+    height: 100%;  /* Full height */
 }
 
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+/* Form Styles */
 form {
     margin: 0 auto;
     width: 200px;
@@ -20,10 +20,38 @@ label {
     margin-top: 20px;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"],
+input[type="password"],
+textarea {
     margin-top: 5px;
 }
 
-input[type="submit"] {
+input[type="submit"],
+button {
     margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Textarea Style */
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+/* Footer Styles */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Content Styles */
+.content {
+    min-height: calc(100% - 3.5rem);  /* Push footer down */
 }
