@@ -1,0 +1,111 @@
+from flask import Blueprint, jsonify, request
+import requests
+import os
+from dotenv import load_dotenv
+
+
+ask_bp = Blueprint('ask_bp', __name__)
+
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
+
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {OPENAI_API_KEY}"
+}
+
+# app = Flask(__name__)
+
+@ask_bp.route('/ask', methods=['POST'])
+def ask():
+    try:
+        question = request.json.get('question')
+
+        product_info = """Product Information:
+                About Us
+        We are Group 17 in CITS5506, and we are embarking on an IoT project.
+
+        Why do we want to do this project?
+        We're living in this incredibly beautiful world, where our eyes are treated to the vibrant green of trees and lawns, the deep blue of the ocean and the sky, and these fluffy white clouds just drifting by up above. We can observe the people strolling around, cars in motion, and the food right in front of us. However, under the same expanse of sky, there’s another bunch of people who are missing out on all of this. It is a beautiful day, but they cannot see it. According to a survey by Vision 2020, it's been revealed that in Australia alone, there are over 575,000 individuals who are either blind or suffering from visual impairments. What's more, visual challenges are poised to become a significant health concern for several generations of elderly Australians in the future. Reports from the Australian government indicate that approximately 444,400 individuals aged 55 or older are dealing with visual impairments. Blindness presents significant challenges that impact various facets of daily life. Mobility becomes a hurdle, as navigating spaces independently becomes both complex and risky. Opportunities to access information through methods like Braille or technology are limited, hindering education and employment prospects. With the absence of visual cues, social interactions are affected, potentially resulting in feelings of isolation and emotional stress. These challenges are something they confront on a daily basis. Even with guide dogs or other assistive tools, individuals with visual impairments still lack the ability to fully perceive and interact with their surroundings. This is where our inspiration stems from. Our "Smart Vision Hat" project has a clear mission: we aim to combine IoT technology with machine learning to create a smart hat that caters to the needs of the visually impaired community. By equipping the hat with sensors and machine learning, we aim to provide near real-time accurate information on objects, people, and obstacles in front of the user. Through the "Smart Vision Hat," we're picturing a future where technology seamlessly integrates into daily life, making devices an integral part of the visually impaired individuals' experiences and transforming the way they navigate the world. Ultimately, this project represents our commitment to using innovation to improve individuals and society as a whole.
+
+        What is the problem we will solve? What benefit our solution will bring? What is its impact?
+        Problems to solve:
+        Individual Problems:
+        Limited Environmental Awareness: Visually impaired people often have difficulty navigating their surroundings, recognizing objects and avoiding obstacles, resulting in a lack of independence and potential safety hazards.
+        Dependence on others: Many visually impaired people rely on the help of others to perform everyday tasks and adjust to unfamiliar environments, which can affect their autonomy and self-confidence.
+        Safety concerns: Without real-time information about the environment, visually impaired individuals may be at risk of accidents and injuries due to obstacles, moving vehicles, and other hazards.
+        Social Interaction: Difficulty recognizing faces and interpreting body language can hinder social interaction, making it difficult for the visually impaired to participate in conversations and build relationships.
+        Social problems:
+        Inclusive Participation: Limited environmental awareness excludes visually impaired individuals from various activities, limiting their societal involvement.
+        Information Divide: Inaccessible visual information creates disparities in accessing education and crucial details.
+        Employment Barriers: Their challenges in navigating environments restrict their employment opportunities and career growth.
+        Elevating Well-being: Addressing these challenges enhances their overall quality of life and integration into the community.
+        Benefits:
+        Benefits for individual:
+        Enhanced Independence: Visually impaired individuals gain greater autonomy in navigating their surroundings and performing daily tasks, reducing their dependence on others.
+        Improved Safety: Real-time information about obstacles and hazards helps prevent accidents and ensures safer mobility.
+        Enriched Social Interaction: The ability to recognize faces and interpret non-verbal cues fosters more meaningful and inclusive social interactions.
+        Expanded Opportunities: With increased awareness of their environment, visually impaired individuals can explore new educational, vocational, and recreational avenues.
+        Benefits for society:
+        Inclusivity: The project promotes a more inclusive society by providing visually impaired individuals the means to actively participate in various activities.
+        Equal Access to Information: Bridging the information gap ensures that visually impaired individuals have the same access to critical information as others, promoting equality.
+        Employment Diversity: By addressing navigational challenges, the project contributes to a more diverse workforce by enabling visually impaired individuals to pursue a wider range of careers.
+        Technological Innovation: The project showcases the positive impact of technology in addressing real-world challenges, inspiring further innovations in assistive devices and accessibility solutions.
+        Empathy and Awareness: The project raises awareness about the challenges faced by visually impaired individuals, fostering empathy and understanding within society.
+        Overall Well-being: As individuals experience increased independence and participation, society benefits from a more empowered and engaged population.
+        Impact:
+        Wide-reaching Impact due to Large Population: The hat is designed to be available for any individuals with vision difficulties, potentially making a meaningful difference in the daily lives and safety of a substantial portion of the population – exceeding 575,000 people in Australia, and potentially even more on a global scale.
+        Impact on the Elderly Population, Elevating Overall Quality of Life: With over 70% of individuals being 65 or older, our project has a direct impact on the elderly community, enhancing their overall quality of life by providing them with the means to navigate their surroundings and engage with the world.
+        Economic Impact: There are significant social and economic costs associated with vision loss. The total annual economic cost of vision loss in Australia is estimated to be $16.6 billion or $28,905 per person with vision loss aged over 40. Our project signifies an opportunity to allocate investments more effectively, potentially leading to optimized outcomes for both the economy and the visually impaired population.
+        Creating Market Value: In the market, numerous products aid the visually impaired with varying market values. For guide dogs, the total value is $59,600: $50,000 upfront plus $1,200 annually over an estimated 8-year working span. When compared to our visual assistance hat, it will generate a certain market value.
+        Generating Employment Opportunities: Our initiative generates new employment opportunities, ranging from research and development to manufacturing, distribution, and ongoing maintenance of the "Smart Vision Hat."
+        Enhancing Societal Well-being, Inclusivity, and Social Harmony: By addressing the challenges faced by visually impaired individuals, our project contributes to the overall well-being of society. It promotes inclusivity by reducing barriers and fostering social harmony, stability, and cohesion."""
+
+        user_manual = """User Manual
+        1. Insight Snap Mode:
+        This mode is designed to quickly identify objects in front of the user.
+
+        a. Click the button.
+        b. The camera takes pictures.
+        c. The microcontroller and the software analyze the picture.
+        d. Objects are detected, and the speaker announces the result.
+        Note: This mode is best suited for stationary users who wish to identify objects in their immediate surroundings.
+
+        2. Eyes-On Mode:
+        This mode provides continuous visual feedback to the user.
+
+        a. Click the button.
+        b. The camera continuously captures pictures.
+        c. The microcontroller and the software analyze the pictures.
+        d. Objects are detected, and the speaker announces the result.
+        Note: This mode is ideal for users on the move. It provides real-time feedback about the user's surroundings.
+
+        3. Vision Assist Mode:
+        This mode connects the user with a human assistant for immediate help.
+
+        a. Click the button.
+        b. A video call will be established between the vision-impaired individual and their chosen caretaker.
+        c. The user can communicate with their caretaker using the built-in microphone to receive guidance.
+        Note: This mode is designed for users who require human assistance in unfamiliar or complex environments."""
+
+        instructions = """The above given text is the product information and user manual of our product: Smart Vision Hat.
+        And the following text is the questions raised by our user, please answer the questions based on the product information and user manual given. 
+        Do not use any other information."""
+        
+        prompt = f"{product_info}\n{user_manual}\n{instructions}\nQ: {question}\nA:"
+        data = {
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        }
+        response = requests.post(OPENAI_ENDPOINT, headers=headers, json=data)
+        response.raise_for_status()
+        answer = response.json()['choices'][0]['message']['content']
+        return jsonify({"answer": answer})
+    except Exception as e:
+        print(f"Error: {e}")  # log the error
+        return jsonify({"error": "Internal Server Error"}), 500
