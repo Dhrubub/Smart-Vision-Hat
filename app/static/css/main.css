@@ -84,3 +84,18 @@ textarea {
     margin-bottom: 60px;  /* Adjust according to your footer's height */
     flex: 1;  /* Make content grow to fill available space */
 }
+
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+}
+canvas {
+max-width: 800px;
+max-height: 400px;
+}
+
+
