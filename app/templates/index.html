@@ -1,42 +1,60 @@
 {% extends "components/base.html" %}
 
-
 {% block content %}
-    <div class="container mt-5" id="page-wrapper">
-        <h1 class="text-center">Welcome to Smart Vision Hat</h1>
-        <p class="lead text-center">
-            Revolutionizing the way visually impaired individuals interact with their surroundings.
-        </p>
+    <!-- Hero Section -->
+    <div class="jumbotron jumbotron-fluid text-center bg-primary text-white">
+        <div class="container">
+            <h1 class="display-4">Welcome to Smart Vision Hat</h1>
+            <p class="lead">
+                Revolutionizing the way visually impaired individuals interact with their surroundings.
+            </p>
+        </div>
+    </div>
 
-        <hr>
-
-        <h2>Features</h2>
+    <!-- Features -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-5">Features</h2>
 
         <div class="row">
             <!-- Insight Snap Mode -->
             <div class="col-md-4">
-                <h3>Insight Snap Mode</h3>
-                <p>Quickly identify objects in front of the user. Best suited for stationary users.</p>
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-camera fa-3x mb-3"></i>
+                        <h3>Insight Snap Mode</h3>
+                        <p>Quickly identify objects in front of the user. Best suited for stationary users.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Eyes-On Mode -->
             <div class="col-md-4">
-                <h3>Eyes-On Mode</h3>
-                <p>Provides continuous visual feedback. Ideal for users on the move.</p>
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-eye fa-3x mb-3"></i>
+                        <h3>Eyes-On Mode</h3>
+                        <p>Provides continuous visual feedback. Ideal for users on the move.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Vision Assist Mode -->
             <div class="col-md-4">
-                <h3>Vision Assist Mode</h3>
-                <p>Connect with a human assistant for immediate help in unfamiliar environments.</p>
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-friends fa-3x mb-3"></i>
+                        <h3>Vision Assist Mode</h3>
+                        <p>Get instant help from your contacts in unfamiliar places.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <hr>
 
-        <div class="text-center">
-            <a href="{{ url_for('user_manual') }}" class="btn btn-primary">Learn More in the User Manual</a>
-            <a href="{{ url_for('system_log') }}" class="btn btn-secondary">Check System Log</a>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('user_manual') }}" class="btn btn-primary btn-lg">Learn More in the User Manual</a>
+            <a href="{{ url_for('system_log') }}" class="btn btn-secondary btn-lg">Check System Log</a>
         </div>
     </div>
 {% endblock %}

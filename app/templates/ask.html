@@ -1,17 +1,45 @@
 {% extends "components/base.html" %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ask.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="container mt-4" role="main" id="page-wrapper">
-        <h2>Ask anything regarding our product!</h2>
-        <textarea id="question" placeholder="Type your question..." aria-label="Question input"></textarea>
-        <button onclick="getAnswer()" aria-label="Ask button">Ask</button>
-        <button onclick="speakAnswer()" aria-label="Speak button">Speak</button>
-        <button onclick="stopSpeaking()" aria-label="Stop Speaking button">Stop</button>
-        <button onclick="startListening()" aria-label="Voice Input button">Voice Input</button>
-        <div id="loading" style="display:none;">Loading...</div>
-        <div role="region" aria-live="polite">
-            <h3>Answer:</h3>
-            <p id="answer"></p>
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Ask anything regarding our product!</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea id="question" class="form-control" rows="4" placeholder="Type your question..." aria-label="Question input"></textarea>
+                        </div>
+                        <div class="btn-toolbar mb-4">
+                            <button class="btn btn-primary" onclick="getAnswer()" aria-label="Ask button">
+                                <i class="fas fa-question-circle"></i> Ask
+                            </button>
+                            <button class="btn btn-info ml-2" onclick="speakAnswer()" aria-label="Speak button">
+                                <i class="fas fa-volume-up"></i> Speak
+                            </button>
+                            <button class="btn btn-warning ml-2" onclick="stopSpeaking()" aria-label="Stop Speaking button">
+                                <i class="fas fa-stop"></i> Stop
+                            </button>
+                            <button class="btn btn-success ml-2" onclick="startListening()" aria-label="Voice Input button">
+                                <i class="fas fa-microphone"></i> Voice Input
+                            </button>
+                        </div>
+                        <div id="loading" class="mb-4" style="display:none;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>
+                        <div role="region" aria-live="polite">
+                            <h3 class="mb-4">Answer:</h3>
+                            <p id="answer"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/ask.js') }}"></script>
