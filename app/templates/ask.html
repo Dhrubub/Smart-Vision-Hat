@@ -5,6 +5,9 @@
         <h2>Ask anything regarding our product!</h2>
         <textarea id="question" placeholder="Type your question..." aria-label="Question input"></textarea>
         <button onclick="getAnswer()" aria-label="Ask button">Ask</button>
+        <button onclick="speakAnswer()" aria-label="Speak button">Speak</button>
+        <button onclick="stopSpeaking()" aria-label="Stop Speaking button">Stop</button>
+        <button onclick="startListening()" aria-label="Voice Input button">Voice Input</button>
         <div id="loading" style="display:none;">Loading...</div>
         <div role="region" aria-live="polite">
             <h3>Answer:</h3>

@@ -17,3 +17,36 @@ async function getAnswer() {
         document.getElementById("answer").textContent = "An error occurred.";
     }
 }
+
+// Speech recognition and synthesis
+let recognition;
+
+if ('webkitSpeechRecognition' in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.onresult = function(event) {
+    const text = event.results[0][0].transcript;
+    document.getElementById('question').value = text;
+  };
+}
+
+function startListening() {
+  if (recognition) {
+    recognition.start();
+  } else {
+    alert("Your browser doesn't support speech recognition.");
+  }
+}
+
+let synth = window.speechSynthesis;
+
+function speakAnswer() {
+  const answerText = document.getElementById("answer").textContent;
+  const utterance = new SpeechSynthesisUtterance(answerText);
+  synth.speak(utterance);
+}
+
+function stopSpeaking() {
+  synth.cancel();
+}
+
+  
