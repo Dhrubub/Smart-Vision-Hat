@@ -1,0 +1,53 @@
+/* Ask Section */
+.ask-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ask-title {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.ask-input-group {
+    margin-bottom: 30px;
+}
+
+.ask-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.ask-answer-section {
+    margin-top: 20px;
+}
+
+.ask-answer-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.ask-answer-text {
+    font-size: 1em;
+}
+
+/* Button Styles */
+.button-group {
+    margin-top: 20px;
+}
+
+.action-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

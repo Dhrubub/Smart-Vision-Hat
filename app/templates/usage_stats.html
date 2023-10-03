@@ -1,32 +1,46 @@
 {% extends "components/base.html" %}
 
 {% block content %}
-  <div class="container mt-4" role="main" id="page-wrapper">
-    <h2>Usage Stats</h2>
+    <div class="container mt-4" role="main" id="page-wrapper">
+        <h2>Usage Stats</h2>
 
-    <!-- Mode Usage Stats -->
-    <div class="chart-container">
-        <h3>Mode Usage Stats</h3>
-        <canvas id="modeUsageChart"></canvas>
-    </div>
-    
-    <!-- Usage Time Stats -->
-    <div class="chart-container">
-        <h3>Usage Time Stats</h3>
-        <canvas id="usageTimeChart"></canvas>
-    </div>
-    
-    <!-- Top 10 Objects Detected -->
-    <div class="chart-container">
-        <h3>Top 10 Objects Detected</h3>
-        <canvas id="topObjectsChart"></canvas>
-    </div>
-  
-  </div>
-  
+        <!-- Mode Usage Stats -->
+        <div class="card my-4">
+            <div class="card-header">
+                <h3>Mode Usage Stats</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="modeUsageChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-  </div>
+        <!-- Usage Time Stats -->
+        <div class="card my-4">
+            <div class="card-header">
+                <h3>Usage Time Stats</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="usageTimeChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="{{ url_for('static', filename='js/usage_stats.js') }}"></script>
+        <!-- Top 10 Objects Detected -->
+        <div class="card my-4">
+            <div class="card-header">
+                <h3>Top 10 Objects Detected</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="topObjectsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/usage_stats.js') }}"></script>
 {% endblock %}
