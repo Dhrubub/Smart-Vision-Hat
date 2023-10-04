@@ -1,0 +1,61 @@
+/* General Styles */
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+/* Navbar fixed at the top */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+}
+
+/* Add padding to the top of the wrapper to prevent navbar from overlapping */
+#page-wrapper {
+    padding-top: 80px;
+}
+
+/* Make the body a flex container */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* dark mode */
+    background-color: black;
+    color: white;
+}
+
+/* Container and Content Styles */
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+.content {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    flex: 1;
+}
+
+/* Footer fixed at the bottom */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1030;
+}
+
+/* Chart Container */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+}
+canvas {
+    max-width: 800px;
+    max-height: 400px;
+}

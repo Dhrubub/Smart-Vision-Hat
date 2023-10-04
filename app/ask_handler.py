@@ -3,13 +3,13 @@ import requests
 import os
 from dotenv import load_dotenv
 
+# product_info path
+product_info_dir = './app/product_info/'
 
+# Activate the ask blueprint
 ask_bp = Blueprint('ask_bp', __name__)
 
-def read_file(filepath):
-            with open(filepath, 'r') as f:
-                return f.read()
-
+# Load environment variables - OpenAI API key
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
@@ -19,16 +19,18 @@ headers = {
     "Authorization": f"Bearer {OPENAI_API_KEY}"
 }
 
-# app = Flask(__name__)
+def read_file(filepath):
+            with open(filepath, 'r') as f:
+                return f.read()
 
 @ask_bp.route('/ask', methods=['POST'])
 def ask():
     try:
         question = request.json.get('question')
 
-        product_info = read_file('product_info/product_info.txt')
-        user_manual = read_file('product_info/user_manual.txt')
-        instructions = read_file('product_info/instructions.txt')
+        product_info = read_file(product_info_dir + 'product_info.txt')
+        user_manual = read_file(product_info_dir + 'user_manual.txt')
+        instructions = read_file(product_info_dir + 'instructions.txt')
         
         prompt = f"{product_info}\n{user_manual}\n{instructions}\nQ: {question}\nA:"
         data = {

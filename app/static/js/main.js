@@ -1,3 +1,24 @@
+// Detect system color scheme
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    // Load general_dark.css
+    document.getElementById("theme").setAttribute("href", "general_dark.css");
+  } else {
+    // Load general_light.css
+    document.getElementById("theme").setAttribute("href", "general_light.css");
+  }
+  
+  // Listen for changes in system setting
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (e.matches) {
+      // Switch to general_dark.css
+      document.getElementById("theme").setAttribute("href", "general_dark.css");
+    } else {
+      // Switch to general_light.css
+      document.getElementById("theme").setAttribute("href", "general_light.css");
+    }
+  });
+
+
 document.addEventListener("DOMContentLoaded", function () {
     // Placeholder for login status, replace with actual login check
     const userLoggedIn = false; 
@@ -89,4 +110,4 @@ function getAnswer() {
 
 // Attach the sendMessage function to the "Send" button
 document.querySelector('.chat-content button').addEventListener('click', sendMessage);
-
+  
