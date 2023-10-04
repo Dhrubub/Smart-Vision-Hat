@@ -6,6 +6,27 @@ LOG_FILE="run.log"
 # Initialize log file
 echo "---- Starting Script ----" >$LOG_FILE
 
+# Create .env in app/ if it doesn't exist
+if [ ! -f "app/.env" ]; then
+    echo "Creating .env file..." >>$LOG_FILE
+    touch app/.env || {
+        echo "Failed to create .env file." >>$LOG_FILE
+        exit 1
+    }
+fi
+
+# Initialize .env file
+echo "Initializing .env file..." >>$LOG_FILE
+echo "OPENAI_API_KEY=" >>app/.env
+
+# Ask user to type in OpenAI API key to .env file
+echo "Please enter your OpenAI API key: "
+read OPENAI_API_KEY
+echo "OPENAI_API_KEY=$OPENAI_API_KEY" >app/.env || {
+    echo "Failed to write API key to .env file." >>$LOG_FILE
+    exit 1
+}
+
 # Check if venv exists; if not, create it
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..." >>$LOG_FILE
