@@ -19,13 +19,18 @@ fi
 echo "Initializing .env file..." >>$LOG_FILE
 echo "OPENAI_API_KEY=" >>app/.env
 
-# Ask user to type in OpenAI API key to .env file
-echo "Please enter your OpenAI API key: "
+# Ask user to type in OpenAI API key to .env or skip
+echo "Please enter your OpenAI API key or type 'skip' to proceed without it: "
 read OPENAI_API_KEY
-echo "OPENAI_API_KEY=$OPENAI_API_KEY" >app/.env || {
-    echo "Failed to write API key to .env file." >>$LOG_FILE
-    exit 1
-}
+
+if [ "$OPENAI_API_KEY" == "skip" ]; then
+    echo "Skipping OpenAI API key setup. Note: The 'ask' function will not be available."
+else
+    echo "OPENAI_API_KEY=$OPENAI_API_KEY" >app/.env || {
+        echo "Failed to write API key to .env file." >>$LOG_FILE
+        exit 1
+    }
+fi
 
 # Check if venv exists; if not, create it
 if [ ! -d "venv" ]; then
