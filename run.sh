@@ -13,23 +13,21 @@ if [ ! -f "app/.env" ]; then
         echo "Failed to create .env file." >>$LOG_FILE
         exit 1
     }
-fi
+    # Initialize .env file
+    echo "Initializing .env file..." >>$LOG_FILE
+    echo "OPENAI_API_KEY=" >>app/.env
 
-# Initialize .env file
-echo "Initializing .env file..." >>$LOG_FILE
-echo "OPENAI_API_KEY=" >>app/.env
-
-# Ask user to type in OpenAI API key to .env or skip
-echo "Please enter your OpenAI API key or type 'skip' to proceed without it: "
-read OPENAI_API_KEY
-
-if [ "$OPENAI_API_KEY" == "skip" ]; then
-    echo "Skipping OpenAI API key setup. Note: The 'ask' function will not be available."
-else
-    echo "OPENAI_API_KEY=$OPENAI_API_KEY" >app/.env || {
-        echo "Failed to write API key to .env file." >>$LOG_FILE
-        exit 1
-    }
+    # Ask user to type in OpenAI API key to .env or skip
+    echo "Please enter your OpenAI API key or type 'skip' to proceed without it: "
+    read OPENAI_API_KEY
+    if [ "$OPENAI_API_KEY" != "skip" ]; then
+        echo "OPENAI_API_KEY=$OPENAI_API_KEY" >app/.env || {
+            echo "Failed to write API key to .env file." >>$LOG_FILE
+            exit 1
+        }
+    else
+        echo "Skipping OpenAI API key setup. Note: The 'ask' function will not be available."
+    fi
 fi
 
 # Check if venv exists; if not, create it
@@ -61,12 +59,13 @@ if netstat -tuln | grep -q ':5000\s'; then
     exit 1
 fi
 
-# Run Flask app
+# Run Flask app in the background
 echo "Running Flask app..." >>$LOG_FILE
 flask run &
+FLASK_PID=$!
 
 # Sleep to ensure server starts
-sleep 3
+sleep 1
 
 # Open URL based on OS
 echo "Opening browser..." >>$LOG_FILE
@@ -80,5 +79,9 @@ else
     echo "OS not supported" >>$LOG_FILE
     exit 1
 fi
+
+# Use trap to capture INT (Ctrl-C) signals and shut down Flask gracefully
+trap "echo 'Stopping Flask app...'; kill $FLASK_PID" INT
+wait $FLASK_PID
 
 echo "---- Script Ended ----" >>$LOG_FILE
