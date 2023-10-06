@@ -1,9 +1,10 @@
 from . import app, db
-from flask import render_template, jsonify, request, redirect, url_for, session
+from flask import render_template, jsonify, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 import os
 from dotenv import load_dotenv
+import pyrebase
 from app.ask_handler import ask_bp
 
 app.register_blueprint(ask_bp, url_prefix='/')
@@ -52,37 +53,74 @@ def contact_us():
 
 
 
+firebaseConfig = {
+  'apiKey': "AIzaSyCQAj14X510dN2LreUiVJ-Ox26wqkR_xX8",
+  'authDomain': "smart-vision-hat.firebaseapp.com",
+  'projectId': "smart-vision-hat",
+  'storageBucket': "smart-vision-hat.appspot.com",
+  'messagingSenderId': "627181110284",
+  'appId': "1:627181110284:web:deb55084063000eb565a29",
+  'measurementId': "G-LL0X4KC7S6",
+  'databaseURL': ''
+}
+
+firebase = pyrebase.initialize_app(firebaseConfig)
+auth = firebase.auth()
+app.secret_key = "secret"  # Replace this with your own secret key
+
+users = {}  # This is just a simple in-memory data store. In a real-world application, use a database.
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get('username'):
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        try:
+            user = auth.sign_in_with_email_and_password(username, password)
             session['username'] = username
+            flash('Login successful!', 'success')
             return redirect(url_for('index'))
-        else:
-            return 'Invalid username or password'
-    else:
-        return render_template('login.html')
+        except:
+            flash('Invalid credentials', 'danger')
+            return redirect(url_for('login'))
+    
+    return render_template('components/login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = generate_password_hash(request.form['password'])
-        new_user = User(username=username, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('login'))
-    else:
-        return render_template('register.html')
+        email = request.form.get('username')  # Assuming you're using email as a username
+        password = request.form.get('password')
+        
+        try:
+            # Register the user with Firebase
+            auth.create_user_with_email_and_password(email, password)
+            flash('Registration successful! You can now log in.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            error_message = str(e)
+            # Check if the error message contains "EMAIL_EXISTS"
+            if "EMAIL_EXISTS" in error_message:
+                flash('The email address is already in use. Please use a different email or log in.', 'danger')
+            else:
+                flash('Error during registration. Please try again.', 'danger')
+            return redirect(url_for('register'))
+    
+    return render_template('components/register.html')
+
+
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    if 'username' in session:
+        session.pop('username')
+        flash('Successfully logged out!', 'success')
     return redirect(url_for('index'))
+
 
 @app.route('/adjust_refresh_rate', methods=['POST'])
 def adjust_refresh_rate():

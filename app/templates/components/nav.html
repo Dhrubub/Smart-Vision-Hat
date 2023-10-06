@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <!-- Brand Section -->
+    <a class="navbar-brand" href="{{ url_for('index') }}">Smart Vision Hat</a>
+    <!-- Navbar Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+        </li>
+        <!-- Dropdown for User Manual -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            User Manual
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Sublink 1</a></li>
+            <li><a class="dropdown-item" href="#">Sublink 2</a></li>
+          </ul>
+        </li>
+        {% if session.get('username') %}  <!-- Display only if user is logged in -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('system_log') }}">System Log</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('usage_stats') }}">Usage Stats</a>
+          </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('ask_page') }}">Ask Us</a>
+        </li>
+      </ul>
+      <!-- Register and Login Buttons -->
+      <div class="d-flex">
+        {% if session['username'] %} <!-- If user is logged in -->
+          <span class="navbar-text me-2">Hello, {{ session['username'] }}</span>
+          <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='{{ url_for('logout') }}'">Logout</button>
+        {% else %} <!-- If user is not logged in -->
+          <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='{{ url_for('login') }}'">Login</button>
+          <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='{{ url_for('register') }}'">Register</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
