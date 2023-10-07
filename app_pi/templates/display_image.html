@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Uploaded Image</title>
+	</head>
+	<body>
+		<h1>Uploaded Image</h1>
+
+		<!-- Display the image -->
+		<!-- <img
+			src="data:image/jpeg;base64,{{ image_data }}"
+			alt="Uploaded Image"
+		/> -->
+		<img width="500" src="{{image_data}}" />
+
+		<!-- Display the items -->
+		<h2>Detected Items:</h2>
+		<ul>
+			{% for item in items %}
+			<li>{{ item }}</li>
+			{% endfor %}
+		</ul>
+	</body>
+</html>
