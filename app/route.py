@@ -75,6 +75,9 @@ def login():
         try:
             user = auth.sign_in_with_email_and_password(username, password)
             session['username'] = username
+            info = auth.get_account_info(user['idToken'])
+            user_id = info['users'][0]['localId']
+            session['uid'] = user_id
             flash('Login successful!', 'success')
             return redirect(url_for('index'))
         except:
@@ -88,6 +91,7 @@ def login():
 def logout():
     if 'username' in session:
         session.pop('username')
+        session.pop('uid')
         flash('Successfully logged out!', 'success')
     return redirect(url_for('index'))
 
@@ -104,25 +108,29 @@ def settings():
 def user_manual():
     return render_template('user_manual.html', title='Smart Vision Hat', page_name='User Manual')
 
-# Ongoing
+
 @app.route('/system_log')
 def system_log():
     try:
-        # Fetch the logged data from Firebase
-        detected_images_data = db.child("images").get().val()
+        # Fetch data for the logged-in user from Firebase
+        user_uid = session.get('uid')
+        user_data = db.child("users").child(user_uid).get().val()
 
         detected_images = []
-        if detected_images_data:
-            for key, value in detected_images_data.items():
+
+        if user_data and "images" in user_data:
+            for image_id, image_data in user_data["images"].items():
                 detected_images.append({
-                    "image_url": value.get('imageURL'),
-                    "detected_object": value.get('detectionResult')
+                    "image_url": image_data.get('imageURL'),
+                    "detected_object": image_data.get('detected_results')  # Adjusted the key to 'detected_results'
                 })
 
         return render_template('system_log.html', detected_images=detected_images, title='Smart Vision Hat', page_name='System Log')
     except Exception as e:
         # Handle errors as necessary, maybe log them and return a generic error message
         return str(e)
+
+
 
 
 @app.route('/upload_img', methods=['GET', 'POST'])
@@ -147,27 +155,28 @@ def upload_img():
             uploaded_file.save(file_path)
             try:
                 if visibility:
-                    storage.child(f"Public/{uploaded_file.filename}").put(file_path)
+                    storage_path = f"Public/{uploaded_file.filename}"
                 else:
-                    storage.child(f"Private/{uploaded_file.filename}").put(file_path)
+                    storage_path = f"Private/{uploaded_file.filename}"
+                storage.child(storage_path).put(file_path)
+                image_url = storage.child(storage_path).get_url(None)
             except Exception as e:
                 print("Error uploading file:", e)
                 flash('Error uploading image to Firebase', 'danger')
                 return render_template('upload_img.html')
 
-            os.remove(file_path) # Delete the temp file
+            os.remove(file_path)
 
-            # For simplicity, assume we save the filename as "image_captured"
-            # and detected_results as a constant. Modify this part for actual detection
             detected_results = "Example Detected Results"
-            user_data = {
-                "image_captured": uploaded_file.filename,
+            
+            image_data = {
+                "imageURL": image_url,
                 "detected_results": detected_results
             }
 
-            # Save the data to the database under the user's node
             user_uid = session.get('uid')
-            db.child("users").child(user_uid).set(user_data)
+            # Push image data to the 'images' child under the user's UID so a unique image ID is automatically generated
+            db.child("users").child(user_uid).child("images").push(image_data)
 
             flash('Image uploaded and processed!', 'success')
             return redirect(url_for('index'))
@@ -211,6 +220,32 @@ def usage_stats():
     except Exception as e:
         # Handle errors as necessary
         return str(e)
+
+# Ongoing
+@app.route('/update_user_data', methods=['POST'])
+def update_user_data():
+    if not session.get('username'):
+        flash('Please login first', 'danger')
+        return redirect(url_for('login'))
+
+    user_uid = session.get('uid')
+
+    # Assuming you're getting these from a form
+    privacy_preference = request.form.get('privacy_preference') == 'yes'  # Converts to boolean
+    device_ID = request.form.get('device_ID')
+    refresh_rate = int(request.form.get('refresh_rate'))  # Assuming it's a numeric input
+
+    user_data = {
+        "privacy_preference": privacy_preference,
+        "device_ID": device_ID,
+        "refresh_rate": refresh_rate
+    }
+
+    # Set or update user data
+    db.child("users").child(user_uid).child("user_data").set(user_data)
+
+    flash('User data updated successfully!', 'success')
+    return redirect(url_for('settings'))  # Redirect to a settings page or wherever appropriate
 
 
 
