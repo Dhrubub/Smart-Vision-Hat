@@ -140,7 +140,7 @@ def detect_image(frame):
     # Call Flask API endpoint to send both frame and speak data
     try:
         payload = {
-            "device_id": "1",
+            "device_id": "b8:27:eb:a8:66:d1",
             "image": image_data_base64,
             "labels": items_json
         }
