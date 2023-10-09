@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import pyrebase
 from app.ask_handler import ask_bp
 from app.api import api_bp
+import json
 
 app.register_blueprint(ask_bp, url_prefix='/')
 app.register_blueprint(api_bp)
@@ -124,7 +125,7 @@ def system_log():
             for image_id, image_data in user_data["images"].items():
                 detected_images.append({
                     "image_url": image_data.get('imageURL'),
-                    "detected_object": image_data.get('detected_results')  # Adjusted the key to 'detected_results'
+                    "labels": image_data.get('label')  # Adjusted the key to 'detected_results'
                 })
 
         return render_template('system_log.html', detected_images=detected_images, title='Smart Vision Hat', page_name='System Log')

@@ -1,26 +1,38 @@
-{% extends "components/base.html" %}
+{% extends "components/base.html" %} {% block content %}
 
-{% block content %}
-    <div class="container mt-4" id="page-wrapper">
-        <h1 class="text-center">System Log</h1>
-        
-        <div class="d-flex justify-content-center">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Captured Image</th>
-                        <th>Recognized Object</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for detected_image in detected_images %}
-                        <tr>
-                            <td><img src="{{ detected_image.image_url }}" alt="Detected Image" class="img-fluid" style="max-width: 150px;"></td>
-                            <td>{{ detected_image.detected_object }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="container mt-4" id="page-wrapper">
+	<h1 class="text-center">System Log</h1>
+
+	<div class="d-flex justify-content-center">
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Captured Image</th>
+					<th>Recognized Object(s)</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for detected_image in detected_images %}
+				<tr>
+					<td>
+						<img
+							src="{{ detected_image.image_url }}"
+							alt="Detected Image"
+							class="img-fluid"
+							style="max-width: 150px"
+						/>
+					</td>
+					<td>
+						{% for label in detected_image.labels %}
+						<span class="bg-primary text-white rounded-2 p-2 m-1"
+							>{{label}}</span
+						>
+						{% endfor %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
 {% endblock %}

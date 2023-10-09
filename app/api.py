@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 import os
 import pyrebase
-
+import json
 import uuid
 from PIL import Image
 import base64
@@ -29,12 +29,13 @@ storage = firebase.storage()
 def upload():
     try:
         # Get data from the request JSON
-        data = request.json
+        data = request.get_json()
 
         # Extract device_id, image data, and items list from the JSON
         device_id = data.get('device_id')
         image_data = data.get('image')
-        labels = data.get('labels')
+        labels_json = data.get('labels', '[]')
+        labels = json.loads(labels_json)
         private = False
         filename = str(uuid.uuid4())
 
@@ -55,11 +56,11 @@ def upload():
             
             try:
                 if not private:
-                    # pass
-                    storage.child(f"Public/{filename}").put(file_path)
+                    storage_path = f"Public/{filename}"
                 else:
-                    # pass
-                    storage.child(f"Private/{filename}").put(file_path)
+                    storage_path = f"Private/{filename}"
+                storage.child(storage_path).put(file_path)
+                image_url = storage.child(storage_path).get_url(None)
             except Exception as e:
                 print("error upload")
                 return jsonify({'message': 'Error uploading to database'}), 500
@@ -67,11 +68,10 @@ def upload():
 
             os.remove(file_path) # Delete the temp file
 
-            detected_results = labels
             user_data = {
                 "device_id": device_id,
-                "image_captured": filename,
-                "detected_results": detected_results
+                "imageURL": image_url,
+                "label": labels
             }
 
             # Save the data to the database under the user's node
