@@ -14,6 +14,8 @@ import os
 import pygame
 import base64
 
+from gpiozero import Button
+button = Button(2)
 
 server_ip = "127.0.0.1:5000"
 # Define the URL of your Flask API endpoint
@@ -141,9 +143,10 @@ if __name__ == '__main__':
 
         # Check if the 'c' key is pressed
         key = cv2.waitKey(1) & 0xFF
-        if key == ord('c'):
-            # Capture a photo (display only, doesn't save it)
-            # cv2.imshow('Captured Photo', frame)
+        if not ready:
+            print("Ready")
+            ready = True
+        if button.is_pressed:
             detect_image(frame)
 
         # Check if the 'q' key is pressed to quit the program
