@@ -14,10 +14,13 @@ import os
 import pygame
 import base64
 
+from collections import Counter
+
+
 from gpiozero import Button
 button = Button(2)
 
-server_ip = "127.0.0.1:5000"
+server_ip = "172.20.10.4:5000"
 # Define the URL of your Flask API endpoint
 api_url = f"http://{server_ip}/api/upload"
 
@@ -33,12 +36,27 @@ model = YOLO(config["paths"]["model_Path"])
 
 classNames = config["classes"]["classNames"]
 
-def speak(items):
-    # Text you want to convert to speech
-    text = f"{len(items)} item{'s' if not len(items) == 1 else ''} detected"
 
+def combine_items(items):
+    # Count the occurrences of each item
+    item_counts = Counter(items)
+
+    # Initialize an empty list to store the formatted strings
+    formatted_items = []
+
+    # Iterate through the item counts and create the formatted strings
+    for item, count in item_counts.items():
+        if count == 1:
+            formatted_items.append(f'1 {item}')
+        else:
+            formatted_items.append(f'{count} {item}s')
+
+    return formatted_items
+
+
+def speak_single(item):
     # Initialize the gTTS object with the text and language (e.g., 'en' for English)
-    tts = gTTS(text=text, lang='en')
+    tts = gTTS(text=item, lang='en')
 
     # Convert the speech to an in-memory file-like object
     speech_file = io.BytesIO()
@@ -56,6 +74,8 @@ def speak(items):
     while pygame.mixer.music.get_busy():
         pass
 
+
+def speak(items):
     for item in items:
         text = f"{item}"
 
@@ -110,6 +130,8 @@ def detect_image(frame):
                 items.append(crClass)
 
     # cv2.imshow('Captured', frame)
+    speak_single(f"{len(items)} item{'s' if not len(items) == 1 else ''} detected")
+    items = combine_items(items)
     speak(items)
     # call flask url endpoint
     # Convert the frame to JPEG format
@@ -132,6 +154,7 @@ def detect_image(frame):
         print(f"Error: {str(e)}")
 
 
+ready = False
 
 if __name__ == '__main__':
     while True:
@@ -139,12 +162,12 @@ if __name__ == '__main__':
         ret, frame = cap.read()
 
         # Display the frame in a window
-        cv2.imshow('Camera Feed', frame)
+        # cv2.imshow('Camera Feed', frame)
 
         # Check if the 'c' key is pressed
         key = cv2.waitKey(1) & 0xFF
         if not ready:
-            print("Ready")
+            speak_single("Ready")
             ready = True
         if button.is_pressed:
             detect_image(frame)
