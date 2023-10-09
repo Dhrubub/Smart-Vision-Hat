@@ -168,6 +168,7 @@ if __name__ == '__main__':
             speak_single("Ready")
             ready = True
         if button.is_pressed:
+            frame = cv2.flip(frame, 0)
             detect_image(frame)
 
         # Check if the 'q' key is pressed to quit the program
