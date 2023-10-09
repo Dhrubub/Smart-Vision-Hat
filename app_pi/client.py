@@ -154,10 +154,14 @@ if __name__ == '__main__':
         if not ready:
             speak_single("Ready")
             ready = True
+        
         if button2.is_pressed and not eyes_on_mode:
             frame = cv2.flip(frame, 0)
             detect_image(frame)
 
+        if button3.is_pressed:
+            eyes_on_mode = not eyes_on_mode
+            
         if eyes_on_mode:
             device_data = db.child("devices").child(device_id).get()
             if 'privacy' in device_data.val():
@@ -168,10 +172,8 @@ if __name__ == '__main__':
 
             frame = cv2.flip(frame, 0)
             detect_image(frame)
-            sleep(interval)
+            sleep(10)
         
-        if button3.is_pressed:
-            eyes_on_mode = not eyes_on_mode
 
         # Check if the 'q' key is pressed to quit the program
         if key == ord('q'):
