@@ -53,7 +53,7 @@ def register():
                 'id': user_id,
                 "privacy": False,
                 "device_id": '',
-                "refresh_rate": 30
+                "refresh_rate": 20
             }
 
             # Set or update user data
