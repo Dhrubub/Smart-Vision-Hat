@@ -7,7 +7,7 @@ import json
 import os
 import requests
 import subprocess
-
+from time import sleep
 import io
 import os
 import base64
@@ -33,7 +33,10 @@ storage = firebase.storage()
 
 device_id = "b8:27:eb:a8:66:d1"
 
-button = Button(2)
+button2 = Button(2)
+button3 = Button(3)
+
+eyes_on_mode = False
 
 server_ip = "172.20.10.4:5000"
 # Define the URL of your Flask API endpoint
@@ -137,7 +140,7 @@ def detect_image(frame):
 
 
 ready = False
-
+interval = 20
 if __name__ == '__main__':
     while True:
         # Read a frame from the camera
@@ -151,9 +154,26 @@ if __name__ == '__main__':
         if not ready:
             speak_single("Ready")
             ready = True
-        if button.is_pressed:
+        if button2.is_pressed and not eyes_on_mode:
             frame = cv2.flip(frame, 0)
             detect_image(frame)
+
+        while eyes_on_mode:
+            if button3.is_pressed:
+                eyes_on_mode = False
+                break
+            device_data = db.child("devices").child(device_id).get()
+            if 'privacy' in device_data:
+                interval = device_data['refresh_rate']
+            else:
+                interval = 20
+
+            sleep(interval)
+            frame = cv2.flip(frame, 0)
+            detect_image(frame)
+        
+        if button3.is_pressed:
+            eyes_on_mode = True
 
         # Check if the 'q' key is pressed to quit the program
         if key == ord('q'):
