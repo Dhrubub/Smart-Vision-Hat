@@ -50,7 +50,7 @@ def upload():
         if ('privacy' in device_data.val()):
             device_data = device_data.val()
             private = device_data['privacy']
-            has_users
+            has_users = True
 
         add_to_users = []
 
