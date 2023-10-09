@@ -163,7 +163,7 @@ if __name__ == '__main__':
                 eyes_on_mode = False
                 break
             device_data = db.child("devices").child(device_id).get()
-            if 'privacy' in device_data:
+            if 'privacy' in device_data.val():
                 device_data = device_data.val()
                 interval = device_data['refresh_rate']
             else:
