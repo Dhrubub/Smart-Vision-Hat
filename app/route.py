@@ -51,9 +51,8 @@ def register():
 
             user_data = {
                 'id': user_id,
-                "privacy": False,
+                'username': email,
                 "device_id": '',
-                "refresh_rate": 20
             }
 
             # Set or update user data
@@ -116,9 +115,30 @@ def index():
 
 @app.route('/settings')
 def settings():
+    if not session.get('username'):
+        flash('Please login first', 'danger')
+        return redirect(url_for('login'))
     user_uid = session.get('uid')
     user_data = db.child("users").child(user_uid).get().val()['user_data']
-    return render_template('settings.html', title='Smart Vision Hat', page_name='Home', user_data=user_data)
+        
+    device_data = db.child("devices").child(user_data['device_id']).get()
+
+    print(device_data.val())
+
+    if 'privacy' in device_data.val():
+        # Data exists, retrieve it
+        device_data = device_data.val()
+        print(device_data)
+    else:
+        # Data doesn't exist, set it to an empty string
+        device_data = {
+            "privacy": False,
+            "refresh_rate": 20,
+        }
+
+    # print(device_data['privacy'])
+
+    return render_template('settings.html', title='Smart Vision Hat', page_name='Home', user_data=user_data, device_data=device_data)
 
 @app.route('/user_manual')
 def user_manual():
@@ -247,16 +267,23 @@ def update_user_data():
     user_uid = session.get('uid')
 
     # Assuming you're getting these from a form
-    privacy_preference = request.form.get('consent') == True  # Converts to boolean
-    device_ID = request.form.get('device_id')
+    privacy_preference = request.form.get('consent') == '1'  # Converts to boolean
+    print(request.form.get('consent'))
+    device_id = request.form.get('device_id')
     refresh_rate = int(request.form.get('refresh_rate'))  # Assuming it's a numeric input
 
     user_data = {
         'id': user_uid,
-        "privacy": privacy_preference,
-        "device_id": device_ID,
-        "refresh_rate": refresh_rate
+        'username': session['username'],
+        "device_id": device_id,
     }
+
+    if device_id:
+        device_data = {
+            "privacy": privacy_preference,
+            "refresh_rate": refresh_rate,
+        }
+        db.child("devices").child(device_id).set(device_data)
 
     # Set or update user data
     db.child("users").child(user_uid).child("user_data").set(user_data)
