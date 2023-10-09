@@ -76,7 +76,7 @@ def upload():
 
             # Save the data to the database under the user's node
             user_uid = "ya4DaVGaNmdEth3migXHh2zGyCt2"
-            db.child("users").child(user_uid).set(user_data)
+            db.child("users").child(user_uid).child("images").push(user_data)
 
 
         # Check if the user has set keep data to private
