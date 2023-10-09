@@ -37,6 +37,9 @@ device_id = "b8:27:eb:a8:66:d1"
 button2 = Button(2)
 button3 = Button(3)
 
+button2_state = False
+button3_state = False
+
 eyes_on_mode = False
 interval = 20
 
@@ -153,12 +156,12 @@ def detect_image(frame):
 def capture_image():
     global eyes_on_mode
     while eyes_on_mode:
-        device_data = db.child("devices").child(device_id).get()
-        if 'privacy' in device_data.val():
-            device_data = device_data.val()
-            interval = device_data['refresh_rate']
-        else:
-            interval = 20
+        # device_data = db.child("devices").child(device_id).get()
+        # if 'privacy' in device_data.val():
+        #     device_data = device_data.val()
+        #     interval = device_data['refresh_rate']
+        # else:
+        #     interval = 20
 
         # Capture the image using your camera logic
         detected_frame = cv2.flip(frame, 0)
@@ -182,11 +185,19 @@ if __name__ == '__main__':
             speak_single("Ready")
             ready = True
         
-        if button2.is_pressed and not eyes_on_mode:
+
+        if button2.is_pressed and not button2_state:
+            button2_state = True
+
+        if button3.is_pressed and not button3_state:
+            button3_state = True
+
+        if button2.is_pressed == False and button2_state and not eyes_on_mode:
+            button2_state = False
             detected_frame = cv2.flip(frame, 0)
             detect_image(detected_frame)
 
-        if button3.is_pressed:
+        if button3.is_pressed == False and button3_state:
             eyes_on_mode = not eyes_on_mode
             if eyes_on_mode:
                 image_capture_thread = threading.Thread(target=capture_image)
