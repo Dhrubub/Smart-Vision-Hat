@@ -43,20 +43,28 @@ def upload():
         if device_id is None:
             return jsonify({'message': 'Device ID is required'}), 400
         
+        device_data = db.child("devices").child(user_data['device_id']).get()
+
+        has_users = False
+
+        if ('privacy' in device_data.val()):
+            device_data = device_data.val()
+            private = device_data['privacy']
+            has_users
+
         add_to_users = []
 
-        users_ref = db.child('users')
-        users = users_ref.get().each()
+        if has_users:
+            users_ref = db.child('users')
+            users = users_ref.get().each()
 
-        for user in users:
-            user_data = user.val()
-                
-            # Check if 'user_data' exists and has a 'deviceID' key
-            if 'user_data' in user_data:
-                if device_id == user_data['user_data']['device_id']:
-                    add_to_users.append(user_data['user_data']['id'])
-                if user_data['user_data']['privacy']:
-                    private = True
+            for user in users:
+                user_data = user.val()
+                    
+                # Check if 'user_data' exists and has a 'deviceID' key
+                if 'user_data' in user_data:
+                    if device_id == user_data['user_data']['device_id']:
+                        add_to_users.append(user_data['user_data']['id'])
 
         if image_data:
             # Ensure the 'temp' directory exists
