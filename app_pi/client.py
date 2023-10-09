@@ -147,7 +147,7 @@ if __name__ == '__main__':
         ret, frame = cap.read()
 
         # Display the frame in a window
-        # cv2.imshow('Camera Feed', frame)
+        cv2.imshow('Camera Feed', frame)
 
         # Check if the 'c' key is pressed
         key = cv2.waitKey(1) & 0xFF
@@ -156,12 +156,12 @@ if __name__ == '__main__':
             ready = True
         
         if button2.is_pressed and not eyes_on_mode:
-            frame = cv2.flip(frame, 0)
-            detect_image(frame)
+            detected_frame = cv2.flip(frame, 0)
+            detect_image(detected_frame)
 
         if button3.is_pressed:
             eyes_on_mode = not eyes_on_mode
-            
+
         if eyes_on_mode:
             device_data = db.child("devices").child(device_id).get()
             if 'privacy' in device_data.val():
@@ -169,9 +169,10 @@ if __name__ == '__main__':
                 interval = device_data['refresh_rate']
             else:
                 interval = 20
-
-            frame = cv2.flip(frame, 0)
-            detect_image(frame)
+            
+            # ret, frame = cap.read()
+            detected_frame = cv2.flip(frame, 0)
+            detect_image(detected_frame)
             sleep(10)
         
 
