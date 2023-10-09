@@ -52,7 +52,7 @@ def register():
             user_data = {
                 'id': user_id,
                 "privacy": False,
-                "device_ID": '',
+                "device_id": '',
                 "refresh_rate": 30
             }
 
@@ -252,7 +252,7 @@ def update_user_data():
     user_data = {
         'id': user_uid,
         "privacy": privacy_preference,
-        "device_ID": device_ID,
+        "device_id": device_ID,
         "refresh_rate": refresh_rate
     }
 
