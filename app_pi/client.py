@@ -11,6 +11,7 @@ from time import sleep
 import io
 import os
 import base64
+import threading
 
 from collections import Counter
 import pyrebase
@@ -37,6 +38,7 @@ button2 = Button(2)
 button3 = Button(3)
 
 eyes_on_mode = False
+interval = 20
 
 server_ip = "172.20.10.4:5000"
 # Define the URL of your Flask API endpoint
@@ -133,14 +135,39 @@ def detect_image(frame):
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
-        response = requests.post(api_url, data=json.dumps(payload), headers=headers)
-    
+        response = requests.post(api_url, data=json.dumps(payload), headers=headers, timeout=10)
+
+        if eyes_on_mode:
+            device_data = db.child("devices").child(device_id).get()
+            if 'privacy' in device_data.val():
+                device_data = device_data.val()
+                interval = device_data['refresh_rate']
+            else:
+                interval = 20
+            
+            sleep(10)
     except Exception as e:
         print(f"Error: {str(e)}")
 
 
+def capture_image():
+    global eyes_on_mode
+    while eyes_on_mode:
+        device_data = db.child("devices").child(device_id).get()
+        if 'privacy' in device_data.val():
+            device_data = device_data.val()
+            interval = device_data['refresh_rate']
+        else:
+            interval = 20
+
+        # Capture the image using your camera logic
+        detected_frame = cv2.flip(frame, 0)
+        detect_image(detected_frame)
+
+        # Sleep for 10 seconds
+        sleep(10)
+
 ready = False
-interval = 20
 if __name__ == '__main__':
     while True:
         # Read a frame from the camera
@@ -161,25 +188,17 @@ if __name__ == '__main__':
 
         if button3.is_pressed:
             eyes_on_mode = not eyes_on_mode
-
-        if eyes_on_mode:
-            device_data = db.child("devices").child(device_id).get()
-            if 'privacy' in device_data.val():
-                device_data = device_data.val()
-                interval = device_data['refresh_rate']
-            else:
-                interval = 20
-            
-            # ret, frame = cap.read()
-            detected_frame = cv2.flip(frame, 0)
-            detect_image(detected_frame)
-            sleep(10)
+            if eyes_on_mode:
+                image_capture_thread = threading.Thread(target=capture_image)
+                image_capture_thread.start()
         
 
         # Check if the 'q' key is pressed to quit the program
         if key == ord('q'):
+            eyes_on_mode = False
             break
 
     # Release the camera and close all OpenCV windows
+    eyes_on_mode = False
     cap.release()
     cv2.destroyAllWindows()
