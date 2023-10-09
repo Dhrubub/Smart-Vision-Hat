@@ -114,12 +114,10 @@ def detect_image(frame):
             bbox = int(x1), int(y1), int(w), int(h)
 
 
-            cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
-                                colorR=tuple(config["rectSetup"]["rectColor"]))
-
-
             conff = round(float(box.conf[0]), 2)
             if (conff >= 0.4):
+                cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
+                                    colorR=tuple(config["rectSetup"]["rectColor"]))
                 # Class name
                 cls = box.cls[0]
                 crClass = classNames[int(cls)]
