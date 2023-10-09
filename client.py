@@ -12,9 +12,11 @@ import io
 import os
 import pygame
 
+from gpiozero import Button
+button = Button(2)
 
 
-server_ip = "127.0.0.1:5000"
+#server_ip = "127.0.0.1:5000"
 
 
 with open('config.json') as config_file:
@@ -75,6 +77,7 @@ def speak(items):
 
 
 def detect_image(frame):
+    #frame = cv2.flip(frame, 0)
     results = model(frame, stream=False)
     items = []
 
@@ -88,39 +91,44 @@ def detect_image(frame):
             w, h = int(x2) - int(x1), int(y2) - int(y1)
             bbox = int(x1), int(y1), int(w), int(h)
 
-
-            cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
-                                colorR=tuple(config["rectSetup"]["rectColor"]))
-
-
             conff = round(float(box.conf[0]), 2)
-            if (conff >= 0.4):
+            
+            if (conff >= 0.6):
+                #cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
+                 #               colorR=tuple(config["rectSetup"]["rectColor"]))
+
                 # Class name
                 cls = box.cls[0]
                 crClass = classNames[int(cls)]
-                cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
-                                    scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
-                                    offset=config["textSetup"]["offset"])
+                #cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
+                 #                   scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
+                  #                  offset=config["textSetup"]["offset"])
 
                 items.append(crClass)
 
-    cv2.imshow('Captured', frame)
+    #cv2.imshow('Captured', frame)
     speak(items)
 
-
+ready = False
 while True:
     # Read a frame from the camera
     ret, frame = cap.read()
 
     # Display the frame in a window
-    cv2.imshow('Camera Feed', frame)
+    #frame = cv2.flip(frame, 0)
+    #cv2.imshow('Camera Feed', frame)
 
     # Check if the 'c' key is pressed
     key = cv2.waitKey(1) & 0xFF
-    if key == ord('c'):
+    if not ready:
+        print("Ready")
+        ready = True
+    if button.is_pressed:
+        detect_image(frame)
+    #if key == ord('c'):
         # Capture a photo (display only, doesn't save it)
         # cv2.imshow('Captured Photo', frame)
-        detect_image(frame)
+        
 
     # Check if the 'q' key is pressed to quit the program
     if key == ord('q'):
