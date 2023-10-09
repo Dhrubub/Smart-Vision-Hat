@@ -53,7 +53,7 @@ def upload():
                 
             # Check if 'user_data' exists and has a 'deviceID' key
             if 'user_data' in user_data:
-                if device_id == user_data['user_data']['deviceID']:
+                if device_id == user_data['user_data']['device_id']:
                     add_to_users.append(user_data['user_data']['id'])
                 if user_data['user_data']['privacy']:
                     private = True
@@ -77,7 +77,7 @@ def upload():
                 storage.child(storage_path).put(file_path)
                 image_url = storage.child(storage_path).get_url(None)
             except Exception as e:
-                print("error upload")
+                print(f"error {e}")
                 return jsonify({'message': 'Error uploading to database'}), 500
 
 
