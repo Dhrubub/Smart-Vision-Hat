@@ -43,7 +43,7 @@ def upload():
         if device_id is None:
             return jsonify({'message': 'Device ID is required'}), 400
         
-        device_data = db.child("devices").child(user_data['device_id']).get()
+        device_data = db.child("devices").child(device_id).get()
 
         has_users = False
 
