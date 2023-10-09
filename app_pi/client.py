@@ -8,10 +8,8 @@ import os
 import requests
 import subprocess
 
-from gtts import gTTS
 import io
 import os
-import pygame
 import base64
 
 from collections import Counter
