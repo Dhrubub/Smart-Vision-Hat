@@ -15,9 +15,9 @@ import pygame
 import base64
 
 
-server_ip = "0.0.0.0:8080"
+server_ip = "127.0.0.1:5000"
 # Define the URL of your Flask API endpoint
-api_url = f"http://{server_ip}/upload_image"
+api_url = f"http://{server_ip}/api/upload"
 
 
 with open('config.json') as config_file:
@@ -118,8 +118,9 @@ def detect_image(frame):
     # Call Flask API endpoint to send both frame and speak data
     try:
         payload = {
-            "img": image_data_base64,
-            "items": items_json
+            "device_id": "1",
+            "image": image_data_base64,
+            "labels": items_json
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
@@ -127,6 +128,8 @@ def detect_image(frame):
     
     except Exception as e:
         print(f"Error: {str(e)}")
+
+
 
 if __name__ == '__main__':
     while True:
