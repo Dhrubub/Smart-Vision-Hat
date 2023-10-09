@@ -6,7 +6,7 @@ import random
 import json
 import os
 import requests
-
+import subprocess
 
 from gtts import gTTS
 import io
@@ -15,9 +15,26 @@ import pygame
 import base64
 
 from collections import Counter
-
-
+import pyrebase
 from gpiozero import Button
+
+firebaseConfig = {
+  'apiKey': "AIzaSyCQAj14X510dN2LreUiVJ-Ox26wqkR_xX8",
+  'authDomain': "smart-vision-hat.firebaseapp.com",
+  'projectId': "smart-vision-hat",
+  'storageBucket': "smart-vision-hat.appspot.com",
+  'messagingSenderId': "627181110284",
+  'appId': "1:627181110284:web:deb55084063000eb565a29",
+  'measurementId': "G-LL0X4KC7S6",
+  'databaseURL': 'https://smart-vision-hat-default-rtdb.asia-southeast1.firebasedatabase.app'
+}
+
+firebase = pyrebase.initialize_app(firebaseConfig)
+db = firebase.database()
+storage = firebase.storage()
+
+device_id = "b8:27:eb:a8:66:d1"
+
 button = Button(2)
 
 server_ip = "172.20.10.4:5000"
@@ -54,49 +71,18 @@ def combine_items(items):
     return formatted_items
 
 
+def sub_speak(item):
+    subprocess.call(['espeak', '-s', '150', item])
+
 def speak_single(item):
-    # Initialize the gTTS object with the text and language (e.g., 'en' for English)
-    tts = gTTS(text=item, lang='en')
-
-    # Convert the speech to an in-memory file-like object
-    speech_file = io.BytesIO()
-    tts.write_to_fp(speech_file)
-    speech_file.seek(0)
-
-    # Initialize pygame to play the speech
-    pygame.mixer.init()
-    pygame.mixer.music.load(speech_file)
-
-    # Play the speech
-    pygame.mixer.music.play()
-
-    # Wait for the speech to finish
-    while pygame.mixer.music.get_busy():
-        pass
+    # Initialize the gTTS object with the text 
+    sub_speak(item)
 
 
 def speak(items):
     for item in items:
         text = f"{item}"
-
-        # Initialize the gTTS object with the text and language (e.g., 'en' for English)
-        tts = gTTS(text=text, lang='en')
-
-        # Convert the speech to an in-memory file-like object
-        speech_file = io.BytesIO()
-        tts.write_to_fp(speech_file)
-        speech_file.seek(0)
-
-        # Initialize pygame to play the speech
-        pygame.mixer.init()
-        pygame.mixer.music.load(speech_file)
-
-        # Play the speech
-        pygame.mixer.music.play()
-
-        # Wait for the speech to finish
-        while pygame.mixer.music.get_busy():
-            pass
+        speak_single(text)
 
 
 def detect_image(frame):
@@ -140,7 +126,7 @@ def detect_image(frame):
     # Call Flask API endpoint to send both frame and speak data
     try:
         payload = {
-            "device_id": "b8:27:eb:a8:66:d1",
+            "device_id": device_id,
             "image": image_data_base64,
             "labels": items_json
         }
