@@ -75,7 +75,7 @@ def upload():
             }
 
             # Save the data to the database under the user's node
-            user_uid = "4Lp1WS5JOQbpSN3DOhKIU6vDqiW2"
+            user_uid = "ya4DaVGaNmdEth3migXHh2zGyCt2"
             db.child("users").child(user_uid).set(user_data)
 
 
