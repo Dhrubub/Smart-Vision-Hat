@@ -68,6 +68,9 @@ def upload():
 
             os.remove(file_path) # Delete the temp file
 
+            if len(labels) == 0:
+                labels = ["None"]
+
             user_data = {
                 "device_id": device_id,
                 "imageURL": image_url,
