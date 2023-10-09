@@ -12,12 +12,8 @@
 				I do not consent to the use of my data for model
 				training.</label
 			>
-			<input
-				type="checkbox"
-				id="consent"
-				name="consent"
-				value="{{user_data['privacy']}}"
-			/>
+			<input type="checkbox" name="consent" value="1" {{ "checked" if
+			device_data['privacy'] == True }}>
 		</span>
 		<br />
 		<label for="device_id">Device ID</label>
@@ -35,7 +31,7 @@
 			min="10"
 			id="refresh_rate"
 			name="refresh_rate"
-			value="{{user_data['refresh_rate']}}"
+			value="{{device_data['refresh_rate']}}"
 		/>
 	</div>
 
