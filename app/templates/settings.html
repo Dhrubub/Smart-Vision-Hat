@@ -1,0 +1,30 @@
+{% extends "components/base.html" %} {% block content %}
+<form
+	action="{{ url_for('update_user_data') }}"
+	method="POST"
+	enctype="multipart/form-data"
+>
+	<!-- Add this checkbox for consent -->
+	<div>
+		<span>
+			<label for="consent">Do not use data for updates</label>
+			<input type="checkbox" id="consent" name="consent" value="yes" />
+		</span>
+		<br />
+		<label for="device_id">Device ID</label>
+		<input type="text" id="device_id" name="device_id" value="" />
+
+		<br />
+		<label for="refresh_rate">Refresh rate</label>
+		<input
+			type="number"
+			min="10"
+			id="refresh_rate"
+			name="refresh_rate"
+			value="30"
+		/>
+	</div>
+
+	<button type="submit">Update</button>
+</form>
+{% endblock %}

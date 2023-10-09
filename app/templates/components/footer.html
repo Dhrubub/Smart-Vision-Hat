@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="container mt-4 content" role="main">
-    <!-- your content -->
-</div>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='css/main.css') }}"
+		/>
+		<link
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+	</head>
 
-<footer class="footer mt-auto py-3 bg-light">
-    <div class="container">
-        <span class="text-muted">
-            <a href="{{ url_for('about_us') }}">About Us</a> | <a href="{{ url_for('contact_us') }}">Contact Us</a> | <a href="{{ url_for('upload_img') }}">Upload Image</a>
-        </span>
-    </div>
-</footer>
+	<div class="container mt-4 content" role="main">
+		<!-- your content -->
+	</div>
 
+	<footer class="footer mt-auto py-3 bg-light">
+		<div class="container">
+			<span class="text-muted">
+				<a href="{{ url_for('about_us') }}">About Us</a> |
+				<a href="{{ url_for('contact_us') }}">Contact Us</a> |
+				<a href="{{ url_for('settings') }}">Settings</a>
+			</span>
+		</div>
+	</footer>
+</html>

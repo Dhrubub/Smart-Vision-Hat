@@ -49,6 +49,17 @@ def register():
             user_id = info['users'][0]['localId']
             session['uid'] = user_id
 
+            user_data = {
+                'id': user_id,
+                "privacy": False,
+                "device_ID": '',
+                "refresh_rate": 30
+            }
+
+            # Set or update user data
+            db.child("users").child(user_id).child("user_data").set(user_data)
+
+
             # Store deviceID to database
             # db.child("user_metadata").child(user_id).set({"deviceID": deviceID})
 
@@ -234,12 +245,13 @@ def update_user_data():
     user_uid = session.get('uid')
 
     # Assuming you're getting these from a form
-    privacy_preference = request.form.get('privacy_preference') == 'yes'  # Converts to boolean
-    device_ID = request.form.get('device_ID')
+    privacy_preference = request.form.get('consent') == 'yes'  # Converts to boolean
+    device_ID = request.form.get('device_id')
     refresh_rate = int(request.form.get('refresh_rate'))  # Assuming it's a numeric input
 
     user_data = {
-        "privacy_preference": privacy_preference,
+        'id': user_uid,
+        "privacy": privacy_preference,
         "device_ID": device_ID,
         "refresh_rate": refresh_rate
     }
@@ -284,3 +296,6 @@ def adjust_refresh_rate():
 @app.route('/update_software', methods=['POST'])
 def update_software():
     return jsonify({'status': 'software updated'})
+
+
+

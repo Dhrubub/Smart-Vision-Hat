@@ -42,6 +42,21 @@ def upload():
         # Check if device_id is provided
         if device_id is None:
             return jsonify({'message': 'Device ID is required'}), 400
+        
+        add_to_users = []
+
+        users_ref = db.child('users')
+        users = users_ref.get().each()
+
+        for user in users:
+            user_data = user.val()
+                
+            # Check if 'user_data' exists and has a 'deviceID' key
+            if 'user_data' in user_data:
+                if device_id == user_data['user_data']['deviceID']:
+                    add_to_users.append(user_data['user_data']['id'])
+                if user_data['user_data']['privacy']:
+                    private = True
 
         if image_data:
             # Ensure the 'temp' directory exists
@@ -77,9 +92,9 @@ def upload():
                 "label": labels
             }
 
+            for uid in add_to_users:
             # Save the data to the database under the user's node
-            user_uid = "ya4DaVGaNmdEth3migXHh2zGyCt2"
-            db.child("users").child(user_uid).child("images").push(user_data)
+                db.child("users").child(uid).child("images").push(user_data)
 
 
         # Check if the user has set keep data to private
