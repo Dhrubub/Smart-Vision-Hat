@@ -186,6 +186,7 @@ if __name__ == '__main__':
         if key == ord('d'):
             eyes_on_mode = not eyes_on_mode
             if eyes_on_mode:
+                print("detect")
                 image_capture_thread = threading.Thread(target=capture_image)
                 image_capture_thread.start()
         
