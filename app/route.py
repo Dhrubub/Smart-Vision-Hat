@@ -116,7 +116,9 @@ def index():
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html', title='Smart Vision Hat', page_name='Home')
+    user_uid = session.get('uid')
+    user_data = db.child("users").child(user_uid).get().val()['user_data']
+    return render_template('settings.html', title='Smart Vision Hat', page_name='Home', user_data=user_data)
 
 @app.route('/user_manual')
 def user_manual():
@@ -245,7 +247,7 @@ def update_user_data():
     user_uid = session.get('uid')
 
     # Assuming you're getting these from a form
-    privacy_preference = request.form.get('consent') == 'yes'  # Converts to boolean
+    privacy_preference = request.form.get('consent') == True  # Converts to boolean
     device_ID = request.form.get('device_id')
     refresh_rate = int(request.form.get('refresh_rate'))  # Assuming it's a numeric input
 
