@@ -3,11 +3,15 @@
 	action="{{ url_for('update_user_data') }}"
 	method="POST"
 	enctype="multipart/form-data"
+	style="width: fit-content"
 >
 	<!-- Add this checkbox for consent -->
 	<div>
 		<span>
-			<label for="consent">Do not use data for updates</label>
+			<label for="consent">
+				I do not consent to the use of my data for model
+				training.</label
+			>
 			<input
 				type="checkbox"
 				id="consent"
@@ -25,7 +29,7 @@
 		/>
 
 		<br />
-		<label for="refresh_rate">Refresh rate</label>
+		<label for="refresh_rate">Interval</label>
 		<input
 			type="number"
 			min="10"
