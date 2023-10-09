@@ -7,3 +7,4 @@ app.config['SECRET_KEY'] = 'secret'
 db = SQLAlchemy(app)
 
 from . import route
+from . import api

@@ -6,10 +6,11 @@ import os
 from dotenv import load_dotenv
 import pyrebase
 from app.ask_handler import ask_bp
+from app.api import api_bp  # Import the blueprint from api.py
 
 app.register_blueprint(ask_bp, url_prefix='/')
 
-
+app.register_blueprint(api_bp)
 
 # class User(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
