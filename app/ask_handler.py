@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 import requests
 import os
 from dotenv import load_dotenv
+from requests.exceptions import RequestException, Timeout, TooManyRedirects, HTTPError
 
 # product_info path
 product_info_dir = './app/product_info/'
@@ -44,6 +45,23 @@ def ask():
         response.raise_for_status()
         answer = response.json()['choices'][0]['message']['content']
         return jsonify({"answer": answer})
+
+    except Timeout:
+        print("Request to OpenAI timed out.")
+        return jsonify({"error": "Request timed out"}), 504
+
+    except TooManyRedirects:
+        print("Request to OpenAI had too many redirects.")
+        return jsonify({"error": "Too many redirects"}), 508
+
+    except HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")  # e.g. 404 or 500
+        return jsonify({"error": f"HTTP error occurred: {http_err}"}), 500
+
+    except RequestException as req_err:
+        print(f"Request to OpenAI failed: {req_err}")
+        return jsonify({"error": "API request failed"}), 500
+
     except Exception as e:
-        print(f"Error: {e}")  # log the error
+        print(f"Unexpected error: {e}")  # log the error
         return jsonify({"error": "Internal Server Error"}), 500
