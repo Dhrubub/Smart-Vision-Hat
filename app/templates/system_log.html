@@ -1,9 +1,29 @@
-{% extends "components/base.html" %} {% block content %}
+{% extends "components/base.html" %} 
 
+{% block extra_css %}
+<style>
+    .detected-image {
+        max-width: 150px;
+        cursor: pointer;
+    }
+
+    .label-tag {
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 0.2rem;
+        padding: 0.2rem 0.5rem;
+        margin: 0.2rem;
+        display: inline-block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
 <div class="container mt-4" id="page-wrapper">
 	<h1 class="text-center">System Log</h1>
 
-	<div class="d-flex justify-content-center">
+    {% if detected_images|length > 0 %}
+	<div class="d-flex justify-content-center mt-4">
 		<table class="table table-bordered table-striped">
 			<thead>
 				<tr>
@@ -18,16 +38,13 @@
 						<img
 							src="{{ detected_image.image_url }}"
 							alt="Detected Image"
-							class="img-fluid"
-							style="max-width: 150px; cursor: pointer"
+							class="img-fluid detected-image"
 							onclick="openImageInNewWindow('{{ detected_image.image_url }}')"
 						/>
 					</td>
 					<td>
 						{% for label in detected_image.labels %}
-						<span class="bg-primary text-white rounded-2 p-2 m-1"
-							>{{label}}</span
-						>
+						<span class="label-tag">{{label}}</span>
 						{% endfor %}
 					</td>
 				</tr>
@@ -35,6 +52,11 @@
 			</tbody>
 		</table>
 	</div>
+    {% else %}
+    <div class="d-flex justify-content-center mt-4">
+        <p>No images found in the system log.</p>
+    </div>
+    {% endif %}
 </div>
 
 <script>
