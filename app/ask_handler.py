@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from requests.exceptions import RequestException, Timeout, TooManyRedirects, HTTPError
 
 # product_info path
-product_info_dir = './app/product_info/'
+product_info_dir = './product_info/'
 
 # Activate the ask blueprint
 ask_bp = Blueprint('ask_bp', __name__)
