@@ -8,6 +8,7 @@ import pyrebase
 from app.ask_handler import ask_bp
 from app.api import api_bp
 import json
+import git
 
 app.register_blueprint(ask_bp, url_prefix='/')
 app.register_blueprint(api_bp)
@@ -33,6 +34,17 @@ db = firebase.database()
 storage = firebase.storage()
 
 # users = {}  # This is just a simple in-memory data store. In a real-world application, use a database.
+
+
+# For Continuous Deployment
+@app.route('/git_update', methods=['POST'])
+def git_update():
+    repo = git.Repo('./Smart-Vision-Hat')
+    origin = repo.remotes.origin
+    repo.create_head('main',
+                     origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
+    origin.pull()
+    return '', 200
 
 
 @app.route('/register', methods=['GET', 'POST'])
