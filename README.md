@@ -1,8 +1,12 @@
 # Smart Vision Hat Dashboard
 
-## Generates `requirements.txt`
+ ## Dashboard
+ Visit [Smart Vision Hat](https://misoto22.pythonanywhere.com).
 
-```bash
+
+ ## Generates `requirements.txt`
+
+ ```bash
 pip freeze > requirements.txt
 ```
 
