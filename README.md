@@ -1,5 +1,9 @@
 # Smart Vision Hat Dashboard
 
+## Dashboard
+Visit [Smart Vision Hat](https://misoto22.pythonanywhere.com).
+
+
 ## Generates `requirements.txt`
 
 ```bash
