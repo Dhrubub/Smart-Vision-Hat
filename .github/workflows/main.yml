@@ -3,7 +3,7 @@ name: Flask CI
 on:
   push:
     branches:
-      - main # or whichever is your default branch
+      - main
   pull_request:
     branches:
       - main
@@ -25,9 +25,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Print working directory
-        run: pwd
 
       - name: Run tests
         run: pytest tests
