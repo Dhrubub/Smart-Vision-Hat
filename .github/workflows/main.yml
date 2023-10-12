@@ -11,12 +11,12 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.10
+    - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
@@ -29,3 +29,7 @@ jobs:
     - name: Run tests
       run: |
         pytest
+
+    - name: Flask run
+      run: |
+        flask run
