@@ -1,4 +1,4 @@
-name: Flask CI
+name: Flask Web App CI/CD
 
 on:
   push:
@@ -30,3 +30,19 @@ jobs:
         run: pytest tests
         env:
           PYTHONPATH: ./:$PYTHONPATH
+
+      # CD
+      - name: Setup SSH and SCP
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.PYTHONANYWHERE_SSH_KEY }}
+
+      - name: SCP files to PythonAnywhere
+        run: scp -r * misoto22@ssh.pythonanywhere.com:/path/to/your/app
+
+      # Use the PythonAnywhere API to restart your web app:
+      - name: Restart web app on PythonAnywhere
+        run: |
+          curl -H "Authorization: Token ${{ secrets.PYTHONANYWHERE_API_TOKEN }}" \
+               -X POST \
+               https://www.pythonanywhere.com/api/v0/user/misoto22/webapps/misoto22.pythonanywhere.com/reload/
