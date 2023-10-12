@@ -33,12 +33,12 @@ jobs:
 
       # CD
       - name: Setup SSH and SCP
-        uses: webfactory/ssh-agent@v0.5.3
+        uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.PYTHONANYWHERE_SSH_KEY }}
 
       - name: SCP files to PythonAnywhere
-        run: scp -r * misoto22@ssh.pythonanywhere.com:/path/to/your/app
+        run: scp -r * misoto22@ssh.pythonanywhere.com:/home/misoto22/Smart-Vision-Hat
 
       # Use the PythonAnywhere API to restart your web app:
       - name: Restart web app on PythonAnywhere
