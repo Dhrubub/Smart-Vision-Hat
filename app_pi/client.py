@@ -12,6 +12,7 @@ import io
 import os
 import base64
 import threading
+from datetime import datetime
 
 from collections import Counter
 import pyrebase
@@ -102,6 +103,11 @@ def speak(items):
 
 
 def detect_image(frame):
+    # Get the current timestamp
+    current_time = datetime.now()
+    detection_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    detection_mode = "Eyes-on" if eyes_on_mode else "Insight-snap"
+
     results = model(frame, stream=False)
     items = []
 
@@ -135,10 +141,10 @@ def detect_image(frame):
     items = combine_items(items)
     speak(items)
     
-    send_data_thread = threading.Thread(target=send_data, args=(frame, items_dict))
+    send_data_thread = threading.Thread(target=send_data, args=(frame, items_dict, detection_time, detection_mode))
     send_data_thread.start()
     
-def send_data(frame, items_dict):
+def send_data(frame, items_dict, detection_time, detection_mode):
     # call flask url endpoint
     # Convert the frame to JPEG format
     _, frame_jpeg = cv2.imencode(".jpg", frame)
@@ -150,7 +156,9 @@ def send_data(frame, items_dict):
         payload = {
             "device_id": device_id,
             "image": image_data_base64,
-            "labels": items_json
+            "labels": items_json,
+            "time": detection_time,
+            "mode": detection_mode
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 

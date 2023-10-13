@@ -34,6 +34,8 @@ def upload():
         # Extract device_id, image data, and items list from the JSON
         device_id = data.get('device_id')
         image_data = data.get('image')
+        time_data = data.get('time')
+        mode_data = data.get('mode')
         labels_json = data.get('labels', {})
         labels = json.loads(labels_json)
         private = False
@@ -99,7 +101,9 @@ def upload():
             user_data = {
                 "device_id": device_id,
                 "imageURL": image_url,
-                "label": labels
+                "label": labels,
+                "time": time_data,
+                "mode": mode_data
             }
 
             for uid in add_to_users:
