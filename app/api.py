@@ -9,7 +9,7 @@ import cvzone
 from ultralytics import YOLO
 import cv2
 
-with open('/Smart-Vision-Hat/app/config.json') as config_file:
+with open('./config.json') as config_file:
     config = json.load(config_file)
 
 model = YOLO(config["paths"]["model_Path"])
