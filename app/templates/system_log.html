@@ -52,6 +52,16 @@
 						>
 						{% endif %}
 					</td>
+					<td>
+						{% if detected_image.time %}
+						<span class="bg-primary text-white rounded-2 p-2 m-1"
+							>{{detected_image.time}}
+						</span>
+						<span class="bg-primary text-white rounded-2 p-2 m-1"
+							>{{detected_image.mode}}
+						</span>
+						{% endif %}
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
