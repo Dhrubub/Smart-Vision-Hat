@@ -89,8 +89,8 @@
 	},
 	"videoCapture": {
 		"device": 0,
-		"width": 1280,
-		"height": 720
+		"width": 640,
+		"height": 640
 	},
 	"rectSetup": {
 		"length": 10,

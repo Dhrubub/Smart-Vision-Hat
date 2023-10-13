@@ -7,7 +7,7 @@ import json
 import os
 import requests
 import subprocess
-from time import sleep
+from time import time, sleep
 import io
 import os
 import base64
@@ -45,6 +45,8 @@ button3_state = False
 
 eyes_on_mode = False
 interval = 20
+
+START = time()
 
 server_ip = "misoto22.pythonanywhere.com"
 # Define the URL of your Flask API endpoint
@@ -132,6 +134,11 @@ def detect_image(frame):
     items_dict = make_dict(items)
     items = combine_items(items)
     speak(items)
+    
+    send_data_thread = threading.Thread(target=send_data, args=(frame, items_dict))
+    send_data_thread.start()
+    
+def send_data(frame, items_dict):
     # call flask url endpoint
     # Convert the frame to JPEG format
     _, frame_jpeg = cv2.imencode(".jpg", frame)
@@ -155,6 +162,8 @@ def detect_image(frame):
 
 def capture_image():
     global eyes_on_mode
+    global START
+    START = time()
     while eyes_on_mode:
         device_data = db.child("devices").child(device_id).get()
         if 'privacy' in device_data.val():
@@ -164,11 +173,15 @@ def capture_image():
             interval = 20
 
         # Capture the image using your camera logic
+        print(f"Interval: {time() - START}")
+        start = time()
         detected_frame = cv2.flip(frame, 0)
         detect_image(detected_frame)
-        print("detect")
+        print(f"Detection: {time() - start}")
         # Sleep for 10 seconds
+        START = time()
         sleep(interval)
+        
 
 ready = False
 if __name__ == '__main__':
@@ -177,7 +190,7 @@ if __name__ == '__main__':
         ret, frame = cap.read()
 
         # Display the frame in a window
-        #cv2.imshow('Camera Feed', frame)
+        cv2.imshow('Camera Feed', frame)
 
         # Check if the 'c' key is pressed
         key = cv2.waitKey(1) & 0xFF
