@@ -205,7 +205,7 @@ def system_log():
                     "image_url": image_data.get('imageURL'),
                     "labels": image_data.get('label')  # Adjusted the key to 'detected_results'
                 })
-
+        # print(detected_images[-1]['labels'])
         return render_template('system_log.html', detected_images=detected_images, title='Smart Vision Hat', page_name='System Log')
     except Exception as e:
         # Handle errors as necessary, maybe log them and return a generic error message

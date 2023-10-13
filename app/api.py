@@ -34,10 +34,12 @@ def upload():
         # Extract device_id, image data, and items list from the JSON
         device_id = data.get('device_id')
         image_data = data.get('image')
-        labels_json = data.get('labels', '[]')
+        labels_json = data.get('labels', {})
         labels = json.loads(labels_json)
         private = False
         filename = str(uuid.uuid4())
+
+        print(labels)
 
         # Check if device_id is provided
         if device_id is None:
@@ -92,7 +94,7 @@ def upload():
             os.remove(file_path) # Delete the temp file
 
             if len(labels) == 0:
-                labels = ["None"]
+                labels = {"": ""}
 
             user_data = {
                 "device_id": device_id,
