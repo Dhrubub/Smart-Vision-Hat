@@ -17,6 +17,9 @@ from collections import Counter
 import pyrebase
 from gpiozero import Button
 
+
+subprocess.call(['espeak', '-s', '150', "Welcome to smart vision hat"])
+
 firebaseConfig = {
   'apiKey': "AIzaSyCQAj14X510dN2LreUiVJ-Ox26wqkR_xX8",
   'authDomain': "smart-vision-hat.firebaseapp.com",
@@ -43,12 +46,11 @@ button3_state = False
 eyes_on_mode = False
 interval = 20
 
-server_ip = "172.20.10.4:5000"
+server_ip = "misoto22.pythonanywhere.com"
 # Define the URL of your Flask API endpoint
-api_url = f"http://{server_ip}/api/upload"
+api_url = f"https://{server_ip}/api/upload"
 
-
-with open('config.json') as config_file:
+with open('/home/pi/Desktop/Smart-Vision-Hat/app_pi/config.json') as config_file:
     config = json.load(config_file)
 
 cap = cv2.VideoCapture(config["videoCapture"]["device"])
