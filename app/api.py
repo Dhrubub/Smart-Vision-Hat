@@ -139,6 +139,8 @@ def upload():
 @api_bp.route('/process', methods=['POST'])
 def process():
     # return jsonify("hello"), 500
+
+    print("HELLO")
     try:
         # Get data from the request JSON
         data = request.get_json()
