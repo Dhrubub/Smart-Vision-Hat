@@ -5,8 +5,15 @@ import json
 import uuid
 from PIL import Image
 import base64
+import cvzone
+from ultralytics import YOLO
+import cv2
 
+with open('./config.json') as config_file:
+    config = json.load(config_file)
 
+model = YOLO(config["paths"]["model_Path"])
+classNames = config["classes"]["classNames"]
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
 firebaseConfig = {
@@ -123,8 +130,95 @@ def upload():
         return jsonify({'message': 'Data uploaded successfully'}), 200
 
     except Exception as e:
-        print(f"error it this it? {e}")
+        print(f"error {e}")
 
         return jsonify({'message': str(e)}), 500
     
 
+
+@api_bp.route('/process', methods=['POST'])
+def process():
+    try:
+        # Get data from the request JSON
+        data = request.get_json()
+
+        image_data = data.get('image')
+        filename = str(uuid.uuid4())
+
+        if image_data:
+            # Ensure the 'temp' directory exists
+            if not os.path.exists('temp'):
+                os.makedirs('temp')
+            
+            # Save the image temporarily
+            file_path = os.path.join("temp", filename)
+            image_data_bytes = base64.b64decode(image_data.encode('utf-8'))
+            with open(file_path, 'wb') as image_file:
+                image_file.write(image_data_bytes)
+
+
+        frame = cv2.imread(file_path)
+
+        frame, labels = detect_image(frame)
+
+        # print(labels)
+
+        os.remove(file_path) # Delete the temp file
+
+        _, frame_jpeg = cv2.imencode(".jpg", frame)
+        image_data_base64 = base64.b64encode(frame_jpeg.tobytes()).decode('utf-8')
+
+        # Convert labels (an array) to a list
+
+        # Prepare a JSON response with image data and labels
+        response_data = {
+            'image': image_data_base64,
+            'labels': labels
+        }
+
+        # Return the JSON response
+        print("success")
+        return jsonify(response_data), 200
+
+
+        
+
+
+
+    except Exception as e:
+        print(f"error {e}")
+
+        return jsonify({'message': str(e)}), 500
+
+    
+
+def detect_image(frame):
+    results = model(frame, stream=False)
+    items = []
+
+    for r in results:
+        boxes = r.boxes
+
+        for box in boxes:
+            # Bounding box
+
+            x1, y1, x2, y2 = box.xyxy[0]
+            w, h = int(x2) - int(x1), int(y2) - int(y1)
+            bbox = int(x1), int(y1), int(w), int(h)
+
+
+            conff = round(float(box.conf[0]), 2)
+            if (conff >= 0.4):
+                cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
+                                    colorR=tuple(config["rectSetup"]["rectColor"]))
+                # Class name
+                cls = box.cls[0]
+                crClass = classNames[int(cls)]
+                cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
+                                    scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
+                                    offset=config["textSetup"]["offset"])
+
+                items.append(crClass)
+
+    return (frame, items)
+    

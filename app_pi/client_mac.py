@@ -13,6 +13,7 @@ import os
 import base64
 import threading
 from datetime import datetime
+import uuid
 
 from collections import Counter
 import pyrebase
@@ -52,6 +53,7 @@ START = time()
 server_ip = "127.0.0.1:5000"
 # Define the URL of your Flask API endpoint
 api_url = f"http://{server_ip}/api/upload"
+api_url_process = f"http://{server_ip}/api/process"
 
 with open('./config.json') as config_file:
     config = json.load(config_file)
@@ -108,32 +110,75 @@ def detect_image(frame):
     detection_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
     detection_mode = "Eyes-on" if eyes_on_mode else "Insight-snap"
 
-    results = model(frame, stream=False)
+
+    _, frame_jpeg = cv2.imencode(".jpg", frame)
+    image_data_base64 = base64.b64encode(frame_jpeg.tobytes()).decode('utf-8')
+
     items = []
+    # Call Flask API endpoint to send both frame and speak data
+    try:
+        payload = {
+            "image": image_data_base64,
+        }
+        headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
-    for r in results:
-        boxes = r.boxes
+        response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=10)
+    
+        if (response.status_code == 200):
+            print(response.status_code)
+            resonse_data = json.loads(response.text)
+            response_labels = resonse_data['labels']
+            items = response_labels
+            image_data = resonse_data['image']
+            filename = str(uuid.uuid4())
+            if image_data:
+            # Ensure the 'temp' directory exists
+                if not os.path.exists('temp'):
+                    os.makedirs('temp')
+                
+                # Save the image temporarily
+                file_path = os.path.join("temp", filename)
+                image_data_bytes = base64.b64decode(image_data.encode('utf-8'))
+                with open(file_path, 'wb') as image_file:
+                    image_file.write(image_data_bytes)
 
-        for box in boxes:
-            # Bounding box
 
-            x1, y1, x2, y2 = box.xyxy[0]
-            w, h = int(x2) - int(x1), int(y2) - int(y1)
-            bbox = int(x1), int(y1), int(w), int(h)
+            frame = cv2.imread(file_path)
+
+            # print(labels)
+
+            os.remove(file_path) # Delete the temp file
 
 
-            conff = round(float(box.conf[0]), 2)
-            if (conff >= 0.4):
-                cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
-                                    colorR=tuple(config["rectSetup"]["rectColor"]))
-                # Class name
-                cls = box.cls[0]
-                crClass = classNames[int(cls)]
-                cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
-                                    scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
-                                    offset=config["textSetup"]["offset"])
+        else:
+            results = model(frame, stream=False)
 
-                items.append(crClass)
+            for r in results:
+                boxes = r.boxes
+
+                for box in boxes:
+                    # Bounding box
+
+                    x1, y1, x2, y2 = box.xyxy[0]
+                    w, h = int(x2) - int(x1), int(y2) - int(y1)
+                    bbox = int(x1), int(y1), int(w), int(h)
+
+
+                    conff = round(float(box.conf[0]), 2)
+                    if (conff >= 0.4):
+                        cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
+                                            colorR=tuple(config["rectSetup"]["rectColor"]))
+                        # Class name
+                        cls = box.cls[0]
+                        crClass = classNames[int(cls)]
+                        cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
+                                            scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
+                                            offset=config["textSetup"]["offset"])
+
+                        items.append(crClass)
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
 
     # cv2.imshow('Captured', frame)
     speak_single(f"{len(items)} item{'s' if not len(items) == 1 else ''} detected")
@@ -143,6 +188,8 @@ def detect_image(frame):
     
     send_data_thread = threading.Thread(target=send_data, args=(frame, items_dict, detection_time, detection_mode))
     send_data_thread.start()
+
+    
     
 def send_data(frame, items_dict, detection_time, detection_mode):
     # call flask url endpoint
