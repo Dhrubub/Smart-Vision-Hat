@@ -101,7 +101,7 @@ def upload():
             user_data = {
                 "device_id": device_id,
                 "imageURL": image_url,
-                "label": labels,
+                "labels": labels,
                 "time": time_data,
                 "mode": mode_data
             }

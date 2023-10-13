@@ -200,11 +200,7 @@ def system_log():
         detected_images = []
 
         if user_data and "images" in user_data:
-            for image_id, image_data in user_data["images"].items():
-                detected_images.append({
-                    "image_url": image_data.get('imageURL'),
-                    "labels": image_data.get('label')  # Adjusted the key to 'detected_results'
-                })
+            detected_images = list(user_data["images"].values())
         print(detected_images[-1])
         return render_template('system_log.html', detected_images=detected_images, title='Smart Vision Hat', page_name='System Log')
     except Exception as e:
