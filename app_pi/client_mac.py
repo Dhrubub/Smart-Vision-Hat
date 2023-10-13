@@ -183,8 +183,8 @@ def capture_image():
         # Capture the image using your camera logic
         print(f"Interval: {time() - START}")
         start = time()
-        detected_frame = cv2.flip(frame, 0)
-        detect_image(detected_frame)
+        # detected_frame = cv2.flip(frame, 0)
+        detect_image(frame)
         print(f"Detection: {time() - start}")
         # Sleep for 10 seconds
         START = time()
@@ -216,8 +216,8 @@ if __name__ == '__main__':
         # if button2.is_pressed == False and button2_state and not eyes_on_mode:
             # button2_state = False
         if key == ord('c') and not eyes_on_mode:
-            detected_frame = cv2.flip(frame, 0)
-            detect_image(detected_frame)
+            # detected_frame = cv2.flip(frame, 0)
+            detect_image(frame)
 
         # if button3.is_pressed == False and button3_state:
         if key == ord('d'):

@@ -40,7 +40,7 @@
 						/>
 					</td>
 
-					<td>
+					<td style="display: flex; border: none">
 						{% if detected_image.labels %} {% for key, value in
 						detected_image.labels.items() %}
 						<span class="bg-primary text-white rounded-2 p-2 m-1"
@@ -55,12 +55,18 @@
 					</td>
 					<td>
 						{% if detected_image.time %}
-						<span class="bg-primary text-white rounded-2 p-2 m-1"
-							>{{detected_image.time}}
-						</span>
-						<span class="bg-primary text-white rounded-2 p-2 m-1"
-							>{{detected_image.mode}}
-						</span>
+						<p
+							class="bg-info text-white rounded-2 p-2 m-1"
+							style="width: fit-content"
+						>
+							{{detected_image.time}}
+						</p>
+						<p
+							class="bg-info text-white rounded-2 p-2 m-1"
+							style="width: fit-content"
+						>
+							{{detected_image.mode}}
+						</p>
 						{% endif %}
 					</td>
 				</tr>
