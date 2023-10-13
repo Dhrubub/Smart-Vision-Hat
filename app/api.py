@@ -9,9 +9,18 @@ import cvzone
 from ultralytics import YOLO
 import cv2
 
-print(os.getcwd())
+# Get the directory of the currently executing script
+current_directory = os.path.dirname(os.path.abspath(__file__))
 
-with open('./config.json') as config_file:
+# Define the name of your JSON configuration file
+config_file_name = 'config.json'
+
+# Create the absolute path to the JSON configuration file
+config_file_path = os.path.join(current_directory, config_file_name)
+
+# Load the JSON configuration file
+
+with open(config_file_path) as config_file:
     config = json.load(config_file)
 
 model = YOLO(config["paths"]["model_Path"])
