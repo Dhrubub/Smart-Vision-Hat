@@ -8,6 +8,15 @@ import pyrebase
 from app.ask_handler import ask_bp
 from app.api import api_bp
 import json
+import git
+import logging
+import requests
+
+
+# Logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 app.register_blueprint(ask_bp, url_prefix='/')
 app.register_blueprint(api_bp)
@@ -33,6 +42,42 @@ db = firebase.database()
 storage = firebase.storage()
 
 # users = {}  # This is just a simple in-memory data store. In a real-world application, use a database.
+
+
+def reload_pythonanywhere_app():
+    username = 'misoto22'
+    token = 'f5ed5050a2823a7f39a51b32348a721d374b4d89'
+    response = requests.post(
+        f'https://www.pythonanywhere.com/api/v0/user/{username}/webapps/{username}.pythonanywhere.com/reload/',
+        headers={'Authorization': f'Token {token}'}
+    )
+    return response.status_code == 200
+
+
+# For Continuous Deployment
+@app.route('/git_update', methods=['POST'])
+def git_update():
+    try:
+        repo_path = './Smart-Vision-Hat'
+        repo = git.Repo(repo_path)
+        origin = repo.remotes.origin
+
+        # Checking out and pulling the 'main' branch
+        repo.create_head('main', origin.refs.heads.main).set_tracking_branch(origin.refs.heads.main).checkout()
+        origin.pull(branch='main')
+        
+        logger.info("Successfully pulled from the repo.")
+        
+        if not reload_pythonanywhere_app():
+            logger.error("Failed to reload PythonAnywhere app.")
+            return "Failed to reload PythonAnywhere app", 500
+
+        logger.info("Received webhook call and successfully updated and reloaded the app.")
+        return '', 200
+
+    except Exception as e:
+        logger.error(f"Error in git_update: {str(e)}")
+        return str(e), 500
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -327,4 +372,6 @@ def update_software():
     return jsonify({'status': 'software updated'})
 
 
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('components/404.html'), 404
