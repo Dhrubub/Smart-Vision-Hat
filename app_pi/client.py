@@ -61,6 +61,12 @@ model = YOLO(config["paths"]["model_Path"])
 
 classNames = config["classes"]["classNames"]
 
+def make_dict(items):
+    d = {}
+    for item in items:
+        d[item] = d.get(item, 0) + 1
+
+    return d
 
 def combine_items(items):
     # Count the occurrences of each item
@@ -123,12 +129,13 @@ def detect_image(frame):
 
     # cv2.imshow('Captured', frame)
     speak_single(f"{len(items)} item{'s' if not len(items) == 1 else ''} detected")
+    items_dict = make_dict(items)
     items = combine_items(items)
     speak(items)
     # call flask url endpoint
     # Convert the frame to JPEG format
     _, frame_jpeg = cv2.imencode(".jpg", frame)
-    items_json = json.dumps(items)
+    items_json = json.dumps(items_dict)
     image_data_base64 = base64.b64encode(frame_jpeg.tobytes()).decode('utf-8')
 
     # Call Flask API endpoint to send both frame and speak data
@@ -150,7 +157,7 @@ def detect_image(frame):
             else:
                 interval = 20
             
-            sleep(10)
+            sleep(interval)
     except Exception as e:
         print(f"Error: {str(e)}")
 
