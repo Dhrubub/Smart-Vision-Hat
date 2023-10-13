@@ -129,8 +129,8 @@ def detect_image(frame):
 
     # cv2.imshow('Captured', frame)
     speak_single(f"{len(items)} item{'s' if not len(items) == 1 else ''} detected")
-    items = combine_items(items)
     items_dict = make_dict(items)
+    items = combine_items(items)
     speak(items)
     # call flask url endpoint
     # Convert the frame to JPEG format
