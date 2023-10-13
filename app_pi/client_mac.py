@@ -122,7 +122,7 @@ def detect_image(frame):
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
-        response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=20)
+        response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=60)
 
         print(response.status_code)
         return

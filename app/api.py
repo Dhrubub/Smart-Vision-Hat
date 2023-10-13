@@ -173,8 +173,8 @@ def process():
 
         frame = cv2.imread(file_path)
 
-        # frame, labels = detect_image(frame)
-        labels = ["Person"]
+        frame, labels = detect_image(frame)
+        # labels = ["Person"]
 
         # print(labels)
 
@@ -206,29 +206,35 @@ def detect_image(frame):
     results = model(frame, stream=False)
     items = []
 
-    for r in results:
-        boxes = r.boxes
+    try:
 
-        for box in boxes:
-            # Bounding box
+        for r in results:
+            boxes = r.boxes
 
-            x1, y1, x2, y2 = box.xyxy[0]
-            w, h = int(x2) - int(x1), int(y2) - int(y1)
-            bbox = int(x1), int(y1), int(w), int(h)
+            for box in boxes:
+                # Bounding box
+
+                x1, y1, x2, y2 = box.xyxy[0]
+                w, h = int(x2) - int(x1), int(y2) - int(y1)
+                bbox = int(x1), int(y1), int(w), int(h)
 
 
-            conff = round(float(box.conf[0]), 2)
-            if (conff >= 0.4):
-                cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
-                                    colorR=tuple(config["rectSetup"]["rectColor"]))
-                # Class name
-                cls = box.cls[0]
-                crClass = classNames[int(cls)]
-                cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
-                                    scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
-                                    offset=config["textSetup"]["offset"])
+                conff = round(float(box.conf[0]), 2)
+                if (conff >= 0.4):
+                    cvzone.cornerRect(frame, bbox, l=config["rectSetup"]["length"], t=config["rectSetup"]["thickness"],
+                                        colorR=tuple(config["rectSetup"]["rectColor"]))
+                    # Class name
+                    cls = box.cls[0]
+                    crClass = classNames[int(cls)]
+                    cvzone.putTextRect(frame, f'{crClass} {conff}', (max(0, int(x1)), max(35, int(y1))),
+                                        scale=config["textSetup"]["scale"], thickness=config["textSetup"]["thickness"],
+                                        offset=config["textSetup"]["offset"])
 
-                items.append(crClass)
+                    items.append(crClass)
+    except Exception as e:
+            print(f"error {e}")
+
+            return jsonify({'message': str(e)}), 500        
 
     return (frame, items)
     
