@@ -9,6 +9,8 @@ import cvzone
 from ultralytics import YOLO
 import cv2
 
+print(os.getcwd())
+
 with open('./config.json') as config_file:
     config = json.load(config_file)
 
