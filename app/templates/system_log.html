@@ -1,7 +1,7 @@
 {% extends "components/base.html" %} {% block extra_css %}
 <style>
 	.detected-image {
-		max-width: 150px;
+		max-width: 200px !important;
 		cursor: pointer;
 	}
 
@@ -38,12 +38,19 @@
 							onclick="openImageInNewWindow('{{ detected_image.image_url }}')"
 						/>
 					</td>
+
 					<td>
-						{% for key, value in detected_image.labels.items() %}
+						{% if detected_image.labels %} {% for key, value in
+						detected_image.labels.items() %}
 						<span class="bg-primary text-white rounded-2 p-2 m-1"
 							>{{value}} {{key}}{% if value > 1 %}s{% endif %}
 						</span>
-						{% endfor %}
+						{% endfor %} {% else %}
+						<!-- Default content for when detected_image.labels is None -->
+						<span class="bg-secondary text-white rounded-2 p-2 m-1"
+							>None</span
+						>
+						{% endif %}
 					</td>
 				</tr>
 				{% endfor %}

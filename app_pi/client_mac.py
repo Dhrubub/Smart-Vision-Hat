@@ -147,15 +147,6 @@ def detect_image(frame):
 
         response = requests.post(api_url, data=json.dumps(payload), headers=headers, timeout=10)
 
-        if eyes_on_mode:
-            device_data = db.child("devices").child(device_id).get()
-            if 'privacy' in device_data.val():
-                device_data = device_data.val()
-                interval = device_data['refresh_rate']
-            else:
-                interval = 20
-            
-            sleep(interval)
     except Exception as e:
         print(f"Error: {str(e)}")
 
@@ -163,19 +154,19 @@ def detect_image(frame):
 def capture_image():
     global eyes_on_mode
     while eyes_on_mode:
-        # device_data = db.child("devices").child(device_id).get()
-        # if 'privacy' in device_data.val():
-        #     device_data = device_data.val()
-        #     interval = device_data['refresh_rate']
-        # else:
-        #     interval = 20
+        device_data = db.child("devices").child(device_id).get()
+        if 'privacy' in device_data.val():
+            device_data = device_data.val()
+            interval = device_data['refresh_rate']
+        else:
+            interval = 20
 
         # Capture the image using your camera logic
         detected_frame = cv2.flip(frame, 0)
         detect_image(detected_frame)
 
         # Sleep for 10 seconds
-        sleep(10)
+        sleep(interval)
 
 ready = False
 if __name__ == '__main__':

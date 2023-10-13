@@ -94,7 +94,7 @@ def upload():
             os.remove(file_path) # Delete the temp file
 
             if len(labels) == 0:
-                labels = {"": ""}
+                labels = {}
 
             user_data = {
                 "device_id": device_id,
@@ -119,7 +119,7 @@ def upload():
         return jsonify({'message': 'Data uploaded successfully'}), 200
 
     except Exception as e:
-        print(f"error {e}")
+        print(f"error it this it? {e}")
 
         return jsonify({'message': str(e)}), 500
     
