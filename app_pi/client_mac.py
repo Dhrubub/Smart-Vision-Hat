@@ -50,10 +50,10 @@ interval = 20
 
 START = time()
 
-server_ip = "127.0.0.1:5000"
+server_ip = "misoto22.pythonanywhere.com"
 # Define the URL of your Flask API endpoint
-api_url = f"http://{server_ip}/api/upload"
-api_url_process = f"http://{server_ip}/api/process"
+api_url = f"https://{server_ip}/api/upload"
+api_url_process = f"https://{server_ip}/api/process"
 
 with open('./config.json') as config_file:
     config = json.load(config_file)
@@ -122,7 +122,10 @@ def detect_image(frame):
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
-        response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=10)
+        response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=20)
+
+        print(response.status_code)
+        return
     
         if (response.status_code == 200):
             print(response.status_code)
