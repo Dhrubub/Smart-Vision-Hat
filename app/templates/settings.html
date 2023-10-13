@@ -8,10 +8,7 @@
 	<!-- Add this checkbox for consent -->
 	<div>
 		<span>
-			<label for="consent">
-				I do not consent to the use of my data for model
-				training.</label
-			>
+			<label for="consent"> Do not use data for model development.</label>
 			<input type="checkbox" name="consent" value="1" {{ "checked" if
 			device_data['privacy'] == True }}>
 		</span>
