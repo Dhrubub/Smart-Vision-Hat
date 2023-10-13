@@ -9,7 +9,7 @@ import cvzone
 from ultralytics import YOLO
 import cv2
 
-with open('./config.json') as config_file:
+with open('/Smart-Vision-Hat/app/config.json') as config_file:
     config = json.load(config_file)
 
 model = YOLO(config["paths"]["model_Path"])
@@ -179,11 +179,6 @@ def process():
         # Return the JSON response
         print("success")
         return jsonify(response_data), 200
-
-
-        
-
-
 
     except Exception as e:
         print(f"error {e}")
