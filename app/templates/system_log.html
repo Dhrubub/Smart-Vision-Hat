@@ -25,6 +25,7 @@
 				<tr>
 					<th>Captured Image</th>
 					<th>Recognized Object(s)</th>
+					<th>Data</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -35,7 +36,7 @@
 							src="{{ detected_image.imageURL }}"
 							alt="Detected Image"
 							class="img-fluid detected-image"
-							onclick="openImageInNewWindow('{{ detected_image.image_url }}')"
+							onclick="openImageInNewWindow('{{ detected_image.imageURL }}')"
 						/>
 					</td>
 
