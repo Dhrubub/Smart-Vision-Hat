@@ -17,7 +17,7 @@ import uuid
 
 from collections import Counter
 import pyrebase
-from gpiozero import Button
+# from gpiozero import Button
 
 
 
@@ -272,13 +272,14 @@ if __name__ == '__main__':
         #     button4_state = True
 
         if button2.is_pressed == False and button2_state and not eyes_on_mode:
+        # if key == ord('c') and not eyes_on_mode:
             button2_state = False
-        if key == ord('c') and not eyes_on_mode:
             detected_frame = cv2.flip(frame, 0)
             detect_image(detected_frame)
 
         if button3.is_pressed == False and button3_state:
         # if key == ord('d'):
+            button3_state = False
             eyes_on_mode = not eyes_on_mode
             if eyes_on_mode:
                 image_capture_thread = threading.Thread(target=capture_image)
