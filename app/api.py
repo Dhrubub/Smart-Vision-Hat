@@ -173,8 +173,8 @@ def process():
 
         frame = cv2.imread(file_path)
 
-        # frame, labels = detect_image(frame)
-        labels = ["Person"]
+        frame, labels = detect_image(frame)
+        # labels = ["Test"]
 
         # print(labels)
 
@@ -238,6 +238,9 @@ def detect_image(frame):
             print(f"error {e}")
 
             return jsonify({'message': str(e)}), 500        
+
+
+    print(items)
 
     return (frame, items)
     
