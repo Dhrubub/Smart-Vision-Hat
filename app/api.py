@@ -56,8 +56,9 @@ def upload():
         # Extract device_id, image data, and items list from the JSON
         device_id = data.get('device_id')
         image_data = data.get('image')
-        time_data = data.get('time')
+        time_data = data.get('timestamp')
         mode_data = data.get('mode')
+        processing_data = data.get('processing_location')
         labels_json = data.get('labels', {})
         labels = json.loads(labels_json)
         private = False
@@ -124,8 +125,9 @@ def upload():
                 "device_id": device_id,
                 "imageURL": image_url,
                 "labels": labels,
-                "time": time_data,
-                "mode": mode_data
+                "timestamp": time_data,
+                "mode": mode_data,
+                "processing_location": processing_data
             }
 
             for uid in add_to_users:
@@ -218,7 +220,7 @@ def process():
         data = request.get_json()
 
         image_data = data.get('image')
-        filename = str(uuid.uuid4()) + ".jpg"
+        filename = str(uuid.uuid4())
 
         if image_data:
             # Ensure the 'temp' directory exists

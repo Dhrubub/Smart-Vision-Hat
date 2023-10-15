@@ -20,6 +20,7 @@ import pyrebase
 from gpiozero import Button
 
 
+
 subprocess.call(['espeak', '-s', '150', "Welcome to smart vision hat"])
 
 firebaseConfig = {
@@ -110,6 +111,8 @@ def detect_image(frame):
     detection_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
     detection_mode = "Eyes-on" if eyes_on_mode else "Insight-snap"
 
+    processing_location = "Cloud"
+
 
     _, frame_jpeg = cv2.imencode(".jpg", frame)
     image_data_base64 = base64.b64encode(frame_jpeg.tobytes()).decode('utf-8')
@@ -125,7 +128,7 @@ def detect_image(frame):
         response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=20)
     
         if (response.status_code == 200):
-            print(response.status_code)
+            # print(response.status_code)
             resonse_data = json.loads(response.text)
             response_labels = resonse_data['labels']
             items = response_labels
@@ -151,6 +154,7 @@ def detect_image(frame):
 
 
         else:
+            processing_location = "On-device"
             results = model(frame, stream=False)
 
             for r in results:
@@ -186,12 +190,12 @@ def detect_image(frame):
     items = combine_items(items)
     speak(items)
     
-    send_data_thread = threading.Thread(target=send_data, args=(frame, items_dict, detection_time, detection_mode))
+    send_data_thread = threading.Thread(target=send_data, args=(frame, items_dict, detection_time, detection_mode, processing_location))
     send_data_thread.start()
 
     
     
-def send_data(frame, items_dict, detection_time, detection_mode):
+def send_data(frame, items_dict, detection_time, detection_mode, processing_location):
     # call flask url endpoint
     # Convert the frame to JPEG format
     _, frame_jpeg = cv2.imencode(".jpg", frame)
@@ -204,8 +208,9 @@ def send_data(frame, items_dict, detection_time, detection_mode):
             "device_id": device_id,
             "image": image_data_base64,
             "labels": items_json,
-            "time": detection_time,
-            "mode": detection_mode
+            "timestamp": detection_time,
+            "mode": detection_mode,
+            "processing_location": processing_location
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
@@ -263,7 +268,7 @@ if __name__ == '__main__':
         if button2.is_pressed == False and button2_state and not eyes_on_mode:
             button2_state = False
         # if key == ord('c') and not eyes_on_mode:
-            detected_frame = cv2.flip(frame, 0)
+            # detected_frame = cv2.flip(frame, 0)
             detect_image(frame)
 
         if button3.is_pressed == False and button3_state:
