@@ -125,10 +125,9 @@ def detect_image(frame):
         response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=60)
 
         print(response.status_code)
-        return
     
         if (response.status_code == 200):
-            print(response.status_code)
+            # print(response.status_code)
             resonse_data = json.loads(response.text)
             response_labels = resonse_data['labels']
             items = response_labels
