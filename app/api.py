@@ -19,7 +19,6 @@ config_file_name = 'config.json'
 config_file_path = os.path.join(current_directory, config_file_name)
 
 # Load the JSON configuration file
-
 with open(config_file_path) as config_file:
     config = json.load(config_file)
 
@@ -42,6 +41,7 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 db = firebase.database()
 storage = firebase.storage()
+
 
 @api_bp.route('/upload', methods=['POST'])
 def upload():
@@ -246,3 +246,11 @@ def detect_image(frame):
 
     return (frame, items)
     
+
+
+file_path = "./cat_dog.jpg"
+
+frame = cv2.imread(file_path)
+
+frame, labels = detect_image(frame)
+print(labels)
