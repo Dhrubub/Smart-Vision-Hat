@@ -193,25 +193,11 @@ def detect_image(frame):
     print(f"I have detected: {items}")
 
     result_queue.put((frame, items))
-    # return (frame, items)
-    
 
-
-# file_path = "./cat_dog.jpg"
-
-# frame = cv2.imread(file_path)
-
-# frame, labels = detect_image(frame)
-# print(labels)
-
-
-thread_frame = None
-thread_labels = None
 
 @api_bp.route('/process', methods=['POST'])
 def process():
-    global thread_frame
-    global thread_labels
+    global result_queue
     # return jsonify("hello"), 500
 
     print("HELLO")
@@ -271,3 +257,66 @@ def process():
         print(f"error {e}")
 
         return jsonify({'message': str(e)}), 500
+    
+
+
+
+from flask import Flask
+from flask_mail import Mail, Message
+
+api_bp.config['MAIL_SERVER'] = 'smtp.gmail.com'
+api_bp.config['MAIL_PORT'] = 587
+api_bp.config['MAIL_USE_TLS'] = True
+api_bp.config['MAIL_USERNAME'] = 'smartvisionhat@gmail.com'
+api_bp.config['MAIL_PASSWORD'] = 'smart.123456'
+
+mail = Mail(api_bp)
+
+@api_bp.route('/send_email', methods=['POST'])
+def send_email():
+    try:
+        data = request.get_json()
+        device_id = data.get('device_id')
+
+        # Check if device_id is provided
+        if device_id is None:
+            return jsonify({'message': 'Device ID is required'}), 400
+        
+        device_data = db.child("devices").child(device_id).get()
+
+        has_users = False
+
+        if ('privacy' in device_data.val()):
+            device_data = device_data.val()
+            has_users = True
+
+        add_to_users = []
+
+        if has_users:
+            users_ref = db.child('users')
+            users = users_ref.get().each()
+
+            for user in users:
+                user_data = user.val()
+                    
+                # Check if 'user_data' exists and has a 'deviceID' key
+                if 'user_data' in user_data:
+                    if device_id == user_data['user_data']['device_id']:
+                        add_to_users.append(user_data['user_data']['username'])
+
+
+        msg = Message('Subject', sender=api_bp.config['MAIL_USERNAME'], recipients=add_to_users)
+
+
+        msg.body = f"Device id {device_id} wants to alert you. Please check the system log for updates."
+        mail.send(msg)
+
+        return "success", 200
+
+
+    except Exception as e:
+        print(f"error {e}")
+
+    return jsonify({'message': str(e)}), 500
+
+

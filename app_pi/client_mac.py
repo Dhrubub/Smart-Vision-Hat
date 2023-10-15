@@ -42,6 +42,7 @@ device_id = "b8:27:eb:a8:66:d1"
 
 # button2 = Button(2)
 # button3 = Button(3)
+# button4 = Button(18)
 
 button2_state = False
 button3_state = False
@@ -55,6 +56,7 @@ server_ip = "misoto22.pythonanywhere.com"
 # Define the URL of your Flask API endpoint
 api_url = f"https://{server_ip}/api/upload"
 api_url_process = f"https://{server_ip}/api/process"
+api_url_email = f"https://{server_ip}/api/send_email"
 
 with open('./config.json') as config_file:
     config = json.load(config_file)
@@ -265,6 +267,9 @@ if __name__ == '__main__':
         # if button3.is_pressed and not button3_state:
         #     button3_state = True
 
+        # if button4.is_pressed and not button4_state:
+        #     button4_state = True
+
         # if button2.is_pressed == False and button2_state and not eyes_on_mode:
             # button2_state = False
         if key == ord('c') and not eyes_on_mode:
@@ -277,6 +282,19 @@ if __name__ == '__main__':
             if eyes_on_mode:
                 image_capture_thread = threading.Thread(target=capture_image)
                 image_capture_thread.start()
+
+        # if button4.is_pressed == False and button4_state:
+        if key == ord('e'):
+            try:
+                payload = {
+                    "device_id": device_id,
+                }
+                headers = {"Content-Type": "application/json"}  # Specify JSON content type
+
+                response = requests.post(api_url_email, data=json.dumps(payload), headers=headers, timeout=10)
+                        
+            except Exception as e:
+                print(f"Error: {str(e)}")
         
 
         # Check if the 'q' key is pressed to quit the program
