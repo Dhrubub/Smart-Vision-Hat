@@ -1,93 +1,104 @@
 {% extends "components/base.html" %} {% block content %}
 <style>
-	.form-container {
-		width: fit-content;
-		margin: 0 auto; /* Center the form */
-		padding: 20px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-	}
+  .form-container {
+    width: fit-content;
+    margin: 0 auto; /* Center the form */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  }
 
-	.form-group {
-		margin-bottom: 20px;
-	}
+  .form-group {
+    margin-bottom: 20px;
+  }
 
-	label {
-		display: block;
-		margin-bottom: 8px;
-	}
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
 
-	input[type='text'],
-	input[type='number'] {
-		width: 100%;
-		padding: 10px;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		transition: border-color 0.3s ease;
-	}
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+  }
 
-	input[type='text']:focus,
-	input[type='number']:focus {
-		border-color: #007bff; /* Change border color on focus */
-	}
+  input[type="text"]:focus,
+  input[type="number"]:focus {
+    border-color: #007bff; /* Change border color on focus */
+  }
 
-	.consent-checkbox {
-		display: flex;
-		align-items: center;
-	}
+  .consent-checkbox {
+    display: flex;
+    align-items: center;
+  }
 
-	.consent-checkbox label {
-		order: 2; /* Place the label to the right of the checkbox */
-		margin-left: 8px;
-	}
+  .consent-checkbox label {
+    order: 2; /* Place the label to the right of the checkbox */
+    margin-left: 8px;
+  }
 </style>
 
 <form
-	action="{{ url_for('update_user_data') }}"
-	method="POST"
-	enctype="multipart/form-data"
-	class="form-container"
+  action="{{ url_for('update_user_data') }}"
+  method="POST"
+  enctype="multipart/form-data"
+  class="form-container"
 >
-	<!-- Consent Checkbox -->
-	<div class="form-group consent-checkbox">
-		<input type="checkbox" id="consent" name="consent" value="1" {{
-		"checked" if device_data['privacy'] == True }}>
-		<label for="consent">Do not use data for model development.</label>
-	</div>
+  <!-- Consent Checkbox -->
+  <div class="form-group consent-checkbox">
+    <input type="checkbox" id="consent" name="consent" value="1" {{ "checked" if
+    device_data['privacy'] == True }}>
+    <label for="consent">Do not use data for model development.</label>
+  </div>
 
-	<!-- Device ID -->
-	<div class="form-group">
-		<label for="device_id">Device ID</label>
-		<input
-			type="text"
-			id="device_id"
-			name="device_id"
-			value="{{user_data['device_id']}}"
-		/>
-	</div>
+  <!-- Device ID -->
+  <div class="form-group">
+    <label for="device_id">Device ID</label>
+    <input
+      type="text"
+      id="device_id"
+      name="device_id"
+      value="{{user_data['device_id']}}"
+    />
+  </div>
 
-	<!-- Refresh Rate -->
-	<div class="form-group">
-		<label for="refresh_rate">Interval (in seconds)</label>
-		<input
-			type="number"
-			min="10"
-			id="refresh_rate"
-			name="refresh_rate"
-			value="{{device_data['refresh_rate']}}"
-		/>
-	</div>
+  <!-- Refresh Rate -->
+  <div class="form-group">
+    <label for="refresh_rate">Interval (in seconds)</label>
+    <input
+      type="number"
+      min="10"
+      id="refresh_rate"
+      name="refresh_rate"
+      value="{{device_data['refresh_rate']}}"
+    />
+  </div>
 
-	<button
-		type="submit"
-		style="
-			padding: 10px 20px;
-			border-radius: 4px;
-			border: none;
-			background-color: #007bff;
-			color: #fff;
-		"
-	>
-		Update
-	</button>
+  <!-- Email of Emergency Contact -->
+  <div class="form-group">
+    <label for="emergency_contact_email">Emergency Contact Email</label>
+    <input
+      type="text"
+      id="emergency_contact_email"
+      name="emergency_contact_email"
+      value="{{user_data['emergency_contact_email']}}"
+    />
+  </div>
+
+  <button
+    type="submit"
+    style="
+      padding: 10px 20px;
+      border-radius: 4px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+    "
+  >
+    Update
+  </button>
 </form>
 {% endblock %}
