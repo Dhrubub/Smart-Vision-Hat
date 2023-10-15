@@ -169,7 +169,8 @@ def process():
             image_data_bytes = base64.b64decode(image_data.encode('utf-8'))
             with open(file_path, 'wb') as image_file:
                 image_file.write(image_data_bytes)
-
+        
+        file_path = "./cat_dog.jpg"
 
         frame = cv2.imread(file_path)
 
