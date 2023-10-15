@@ -203,6 +203,9 @@ def process():
     
 
 def detect_image(frame):
+
+    return (frame, ['person'])
+
     results = model(frame, stream=False)
     items = []
 
