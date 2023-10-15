@@ -208,6 +208,7 @@ def detect_image(frame):
     print("I am detecting image")
     results = model(frame, stream=False)
     items = []
+    print("I have ran the model")
 
     try:
 
