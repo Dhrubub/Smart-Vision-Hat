@@ -8,6 +8,7 @@ import base64
 import cvzone
 from ultralytics import YOLO
 import cv2
+import threading
 
 # Get the directory of the currently executing script
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -226,7 +227,12 @@ def process():
 
         frame = cv2.imread(file_path)
 
-        frame, labels = detect_image(frame)
+
+        send_data_thread = threading.Thread(target=frame, args=(frame, ))
+        send_data_thread.start()
+        # frame, labels = detect_image(frame)
+
+        send_data_thread.join()
         # labels = ["Test"]
 
         # print(labels)
