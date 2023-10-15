@@ -228,14 +228,17 @@ def process():
         frame = cv2.imread(file_path)
 
 
-        send_data_thread = threading.Thread(target=frame, args=(frame, ))
+        send_data_thread = threading.Thread(target=detect_image, args=(frame, ))
         send_data_thread.start()
         # frame, labels = detect_image(frame)
 
         send_data_thread.join()
+
+        frame, labels = send_data_thread.result
+
         # labels = ["Test"]
 
-        # print(labels)
+        print(labels)
 
         os.remove(file_path) # Delete the temp file
 
