@@ -294,8 +294,8 @@ if __name__ == '__main__':
 
         #         response = requests.post(api_url_email, data=json.dumps(payload), headers=headers, timeout=10)
                         
-            except Exception as e:
-                print(f"Error: {str(e)}")
+            # except Exception as e:
+            #     print(f"Error: {str(e)}")
         
 
         # Check if the 'q' key is pressed to quit the program
