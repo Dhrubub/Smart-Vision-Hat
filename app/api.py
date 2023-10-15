@@ -173,8 +173,8 @@ def process():
 
         frame = cv2.imread(file_path)
 
-        frame, labels = detect_image(frame)
-        # labels = ["Person"]
+        # frame, labels = detect_image(frame)
+        labels = ["Person"]
 
         # print(labels)
 

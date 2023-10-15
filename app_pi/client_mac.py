@@ -19,6 +19,10 @@ from collections import Counter
 import pyrebase
 # from gpiozero import Button
 
+# import requests
+from requests.adapters import HTTPAdapter
+
+
 
 subprocess.call(['espeak', '-s', '150', "Welcome to smart vision hat"])
 
@@ -122,7 +126,14 @@ def detect_image(frame):
         }
         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
-        response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=60)
+        # response = requests.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=20)
+
+        # Create a session with connection pooling
+        session = requests.Session()
+        adapter = HTTPAdapter(pool_connections=5, pool_maxsize=5)
+        session.mount('http://', adapter)
+
+        response = session.post(api_url_process, data=json.dumps(payload), headers=headers, timeout=20)
 
         print(response.status_code)
     
