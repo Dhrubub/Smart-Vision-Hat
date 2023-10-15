@@ -202,6 +202,9 @@ def system_log():
         if user_data and "images" in user_data:
             detected_images = list(user_data["images"].values())
         print(detected_images[-1])
+        # Assuming your array is named 'detected_images'
+        detected_images = sorted(detected_images, key=lambda x: x['time'])
+
         return render_template('system_log.html', detected_images=detected_images, title='Smart Vision Hat', page_name='System Log')
     except Exception as e:
         # Handle errors as necessary, maybe log them and return a generic error message
