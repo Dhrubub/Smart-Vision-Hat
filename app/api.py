@@ -205,7 +205,7 @@ def process():
 def detect_image(frame):
 
     # return (frame, ['person'])
-
+    print("I am detecting image")
     results = model(frame, stream=False)
     items = []
 
@@ -239,8 +239,8 @@ def detect_image(frame):
 
             return jsonify({'message': str(e)}), 500        
 
+    print(f"I have detected: {items}")
 
-    print(items)
 
     return (frame, items)
     
