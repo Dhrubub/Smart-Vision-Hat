@@ -9,6 +9,9 @@ import cvzone
 from ultralytics import YOLO
 import cv2
 import threading
+import queue
+
+result_queue = queue.Queue()
 
 # Get the directory of the currently executing script
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -148,7 +151,7 @@ def upload():
     
 
 def detect_image(frame):
-
+    global result_queue
     # return (frame, ['person'])
     print("I am detecting image")
     results = model(frame, stream=False)
@@ -187,8 +190,8 @@ def detect_image(frame):
 
     print(f"I have detected: {items}")
 
-
-    return (frame, items)
+    result_queue.put((frame, items))
+    # return (frame, items)
     
 
 
@@ -200,8 +203,13 @@ def detect_image(frame):
 # print(labels)
 
 
+thread_frame = None
+thread_labels = None
+
 @api_bp.route('/process', methods=['POST'])
 def process():
+    global thread_frame
+    global thread_labels
     # return jsonify("hello"), 500
 
     print("HELLO")
@@ -234,7 +242,7 @@ def process():
 
         send_data_thread.join()
 
-        frame, labels = send_data_thread.result
+        frame, labels = result_queue.get()
 
         # labels = ["Test"]
 
