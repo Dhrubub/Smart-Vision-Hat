@@ -51,10 +51,12 @@ interval = 20
 
 START = time()
 
-server_ip = "misoto22.pythonanywhere.com"
+server_ip = "https://misoto22.pythonanywhere.com"
+# server_ip = "http://127.0.0.1:5000"
 # Define the URL of your Flask API endpoint
-api_url = f"https://{server_ip}/api/upload"
-api_url_process = f"https://{server_ip}/api/process"
+api_url = f"{server_ip}/api/upload"
+api_url_process = f"{server_ip}/api/process"
+api_url_email = f"{server_ip}/api/send_email"
 
 with open('./config.json') as config_file:
     config = json.load(config_file)
@@ -235,7 +237,7 @@ def capture_image():
         # Capture the image using your camera logic
         print(f"Interval: {time() - START}")
         start = time()
-        # detected_frame = cv2.flip(frame, 0)
+        detected_frame = cv2.flip(frame, 0)
         detect_image(frame)
         print(f"Detection: {time() - start}")
         # Sleep for 10 seconds
@@ -268,7 +270,7 @@ if __name__ == '__main__':
         if button2.is_pressed == False and button2_state and not eyes_on_mode:
             button2_state = False
         # if key == ord('c') and not eyes_on_mode:
-            # detected_frame = cv2.flip(frame, 0)
+            detected_frame = cv2.flip(frame, 0)
             detect_image(frame)
 
         if button3.is_pressed == False and button3_state:

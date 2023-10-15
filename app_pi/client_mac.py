@@ -52,11 +52,12 @@ interval = 20
 
 START = time()
 
-server_ip = "misoto22.pythonanywhere.com"
+server_ip = "https://misoto22.pythonanywhere.com"
+# server_ip = "http://127.0.0.1:5000"
 # Define the URL of your Flask API endpoint
-api_url = f"https://{server_ip}/api/upload"
-api_url_process = f"https://{server_ip}/api/process"
-api_url_email = f"https://{server_ip}/api/send_email"
+api_url = f"{server_ip}/api/upload"
+api_url_process = f"{server_ip}/api/process"
+api_url_email = f"{server_ip}/api/send_email"
 
 with open('./config.json') as config_file:
     config = json.load(config_file)
@@ -284,14 +285,14 @@ if __name__ == '__main__':
                 image_capture_thread.start()
 
         # if button4.is_pressed == False and button4_state:
-        if key == ord('e'):
-            try:
-                payload = {
-                    "device_id": device_id,
-                }
-                headers = {"Content-Type": "application/json"}  # Specify JSON content type
+        # if key == ord('e'):
+        #     try:
+        #         payload = {
+        #             "device_id": device_id,
+        #         }
+        #         headers = {"Content-Type": "application/json"}  # Specify JSON content type
 
-                response = requests.post(api_url_email, data=json.dumps(payload), headers=headers, timeout=10)
+        #         response = requests.post(api_url_email, data=json.dumps(payload), headers=headers, timeout=10)
                         
             except Exception as e:
                 print(f"Error: {str(e)}")

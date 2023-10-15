@@ -23,7 +23,6 @@ app.register_blueprint(api_bp)
 
 
 
-
 firebaseConfig = {
   'apiKey': "AIzaSyCQAj14X510dN2LreUiVJ-Ox26wqkR_xX8",
   'authDomain': "smart-vision-hat.firebaseapp.com",
@@ -374,3 +373,26 @@ def update_software():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('components/404.html'), 404
+
+# from flask import Flask
+# from flask_mail import Mail, Message
+
+
+# # Configuration for your email server
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Gmail SMTP server
+# app.config['MAIL_PORT'] = 587  # Use the appropriate port for Gmail
+# app.config['MAIL_USE_TLS'] = True  # Gmail requires TLS
+# app.config['MAIL_USERNAME'] = 'smartvisionhat@gmail.com'  # Your Gmail email address
+# app.config['MAIL_PASSWORD'] = 'smart.123456'  # Your Gmail email password
+
+
+# # Initialize Flask-Mail
+# mail = Mail(app)
+
+# # Create and send an email
+# @app.route('/api/send_email', methods=["GET", "POST"])
+# def send_email():
+#     msg = Message('Hello from Flask-Mail', sender=app.config['MAIL_USERNAME'], recipients=['dhruvjobanputra8@gmail.com'])
+#     msg.body = 'This is a test email sent from Flask using Flask-Mail.'
+#     mail.send(msg)
+#     return 'Email sent successfully.'
