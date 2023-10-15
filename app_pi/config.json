@@ -1,7 +1,7 @@
 {
 	"paths": {
 		"saved_Images_path": "Saved_Images",
-		"model_Path": "./Yolo-Weights/yolov5s.pt"
+		"model_Path": "./Yolo-Weights/yolov8n.pt"
 	},
 	"classes": {
 		"classNames": [
