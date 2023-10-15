@@ -146,63 +146,6 @@ def upload():
         return jsonify({'message': str(e)}), 500
     
 
-
-@api_bp.route('/process', methods=['POST'])
-def process():
-    # return jsonify("hello"), 500
-
-    print("HELLO")
-    try:
-        # Get data from the request JSON
-        data = request.get_json()
-
-        image_data = data.get('image')
-        filename = str(uuid.uuid4())
-
-        if image_data:
-            # Ensure the 'temp' directory exists
-            if not os.path.exists('temp'):
-                os.makedirs('temp')
-            
-            # Save the image temporarily
-            file_path = os.path.join("temp", filename)
-            image_data_bytes = base64.b64decode(image_data.encode('utf-8'))
-            with open(file_path, 'wb') as image_file:
-                image_file.write(image_data_bytes)
-        
-        file_path = "./cat_dog.jpg"
-
-        frame = cv2.imread(file_path)
-
-        frame, labels = detect_image(frame)
-        # labels = ["Test"]
-
-        # print(labels)
-
-        os.remove(file_path) # Delete the temp file
-
-        _, frame_jpeg = cv2.imencode(".jpg", frame)
-        image_data_base64 = base64.b64encode(frame_jpeg.tobytes()).decode('utf-8')
-
-        # Convert labels (an array) to a list
-
-        # Prepare a JSON response with image data and labels
-        response_data = {
-            'image': image_data_base64,
-            'labels': labels
-        }
-
-        # Return the JSON response
-        print("success")
-        return jsonify(response_data), 200
-
-    except Exception as e:
-        print(f"error {e}")
-
-        return jsonify({'message': str(e)}), 500
-
-    
-
 def detect_image(frame):
 
     # return (frame, ['person'])
@@ -248,9 +191,64 @@ def detect_image(frame):
     
 
 
-file_path = "./cat_dog.jpg"
+# file_path = "./cat_dog.jpg"
 
-frame = cv2.imread(file_path)
+# frame = cv2.imread(file_path)
 
-frame, labels = detect_image(frame)
-print(labels)
+# frame, labels = detect_image(frame)
+# print(labels)
+
+
+@api_bp.route('/process', methods=['POST'])
+def process():
+    # return jsonify("hello"), 500
+
+    print("HELLO")
+    try:
+        # Get data from the request JSON
+        data = request.get_json()
+
+        image_data = data.get('image')
+        filename = str(uuid.uuid4()) + ".jpg"
+
+        if image_data:
+            # Ensure the 'temp' directory exists
+            if not os.path.exists('temp'):
+                os.makedirs('temp')
+            
+            # Save the image temporarily
+            file_path = os.path.join("temp", filename)
+            image_data_bytes = base64.b64decode(image_data.encode('utf-8'))
+            with open(file_path, 'wb') as image_file:
+                image_file.write(image_data_bytes)
+        
+        # file_path = "./cat_dog.jpg"
+
+        frame = cv2.imread(file_path)
+
+        frame, labels = detect_image(frame)
+        # labels = ["Test"]
+
+        # print(labels)
+
+        os.remove(file_path) # Delete the temp file
+
+        _, frame_jpeg = cv2.imencode(".jpg", frame)
+        image_data_base64 = base64.b64encode(frame_jpeg.tobytes()).decode('utf-8')
+
+        # Convert labels (an array) to a list
+
+        # Prepare a JSON response with image data and labels
+        response_data = {
+            'image': image_data_base64,
+            'labels': labels
+        }
+
+        # Return the JSON response
+        print("success")
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        print(f"error {e}")
+
+        return jsonify({'message': str(e)}), 500
