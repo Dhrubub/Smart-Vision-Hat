@@ -1,46 +1,122 @@
-{% extends "components/base.html" %}
+{% extends "components/base.html" %} {% block content %}
+<div class="container mt-4" role="main" id="page-wrapper">
+  <h2>Usage Stats</h2>
 
-{% block content %}
-    <div class="container mt-4" role="main" id="page-wrapper">
-        <h2>Usage Stats</h2>
-
-        <!-- Mode Usage Stats -->
-        <div class="card my-4">
-            <div class="card-header">
-                <h3>Mode Usage Stats</h3>
-            </div>
-            <div class="card-body">
-                <div class="chart-container">
-                    <canvas id="modeUsageChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Usage Time Stats -->
-        <div class="card my-4">
-            <div class="card-header">
-                <h3>Usage Time Stats</h3>
-            </div>
-            <div class="card-body">
-                <div class="chart-container">
-                    <canvas id="usageTimeChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Top 10 Objects Detected -->
-        <div class="card my-4">
-            <div class="card-header">
-                <h3>Top 10 Objects Detected</h3>
-            </div>
-            <div class="card-body">
-                <div class="chart-container">
-                    <canvas id="topObjectsChart"></canvas>
-                </div>
-            </div>
-        </div>
+  <!-- Mode Usage Stats -->
+  <div class="card my-4">
+    <div class="card-header">
+      <h3>Mode Usage Stats</h3>
     </div>
+    <div class="card-body">
+      <div class="chart-container">
+        <canvas id="modeUsageChart"></canvas>
+      </div>
+    </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/usage_stats.js') }}"></script>
+  <!-- Usage by Hour -->
+  <div class="card my-4">
+    <div class="card-header">
+      <h3>Usage by Hour</h3>
+    </div>
+    <div class="card-body">
+      <div class="chart-container">
+        <canvas id="usageByHourChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top 10 Objects Detected -->
+  <div class="card my-4">
+    <div class="card-header">
+      <h3>Top 10 Objects Detected</h3>
+    </div>
+    <div class="card-body">
+      <div class="chart-container">
+        <canvas id="topObjectsChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Data from Flask
+  const detectionsByObjectTime = {{ detections_by_object_time | tojson }};
+  const modeCountsTime = {{ mode_counts_time | tojson }};
+  const hourCounts = {{ hour_counts | tojson }};
+
+  // Mode Usage Chart
+  const modeNames = Object.keys(modeCountsTime);
+  const modeCounts = modeNames.map(mode => modeCountsTime[mode].length);
+  new Chart(document.getElementById('modeUsageChart'), {
+    type: 'bar',
+    data: {
+      labels: modeNames,
+      datasets: [{
+        label: 'Mode Usage',
+        data: modeCounts,
+        backgroundColor: '#007bff'
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Mode Usage Stats'
+      }
+    }
+  });
+
+  // Usage By Hour Chart
+  const hourNames = Object.keys(hourCounts).sort();
+  const hourUsage = hourNames.map(hour => hourCounts[hour]);
+  new Chart(document.getElementById('usageByHourChart'), {
+    type: 'bar',
+    data: {
+      labels: hourNames,
+      datasets: [{
+        label: 'Usage by Hour',
+        data: hourUsage,
+        backgroundColor: '#28a745'
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Usage by Hour'
+      }
+    }
+  });
+
+  // Top 10 Objects Detected Chart
+  let objectNames = Object.keys(detectionsByObjectTime);
+  let objectCounts = objectNames.map(obj => detectionsByObjectTime[obj].length);
+
+  // Sort by count in descending order and take top 10
+  const sortedIndices = objectCounts.map((val, index) => index).sort((a, b) => objectCounts[b] - objectCounts[a]).slice(0, 10);
+  const topObjectNames = sortedIndices.map(index => objectNames[index]);
+  const topObjectCounts = sortedIndices.map(index => objectCounts[index]);
+
+  // Elegant color palette
+  const topObjectsColors = ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948', '#B07AA1', '#FF9DA7', '#9C755F', '#BAB0AC'];
+
+  new Chart(document.getElementById('topObjectsChart'), {
+      type: 'doughnut',
+      data: {
+          labels: topObjectNames,
+          datasets: [{
+              data: topObjectCounts,
+              backgroundColor: topObjectsColors.slice(0, topObjectNames.length)
+          }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Top 10 Objects Detected'
+        }
+      }
+  });
+</script>
+
 {% endblock %}
