@@ -1,57 +1,89 @@
-{% extends "components/base.html" %}
+{% extends "components/base.html" %} {% block content %}
+<div class="container mt-4" id="page-wrapper">
+  <h1>User Manual</h1>
 
-{% block content %}
-    <div class="container mt-4" id="page-wrapper">
-        <h1>User Manual</h1>
-
-        <!-- Insight Snap Mode -->
-        <div class="card my-4">
-            <div class="card-header">
-                <h2><i class="fas fa-camera"></i> 1. Insight Snap Mode:</h2>
-            </div>
-            <div class="card-body">
-                <p>This mode is designed to quickly identify objects in front of the user.</p>
-                <ul>
-                    <li><strong>a.</strong> Click the button.</li>
-                    <li><strong>b.</strong> The camera takes pictures.</li>
-                    <li><strong>c.</strong> The microcontroller and the software analyze the picture.</li>
-                    <li><strong>d.</strong> Objects are detected, and the speaker announces the result.</li>
-                </ul>
-                <p>Note: This mode is best suited for stationary users who wish to identify objects in their immediate surroundings.</p>
-            </div>
-        </div>
-
-        <!-- Eyes-On Mode -->
-        <div class="card my-4">
-            <div class="card-header">
-                <h2><i class="fas fa-eye"></i> 2. Eyes-On Mode:</h2>
-            </div>
-            <div class="card-body">
-                <p>This mode provides continuous visual feedback to the user.</p>
-                <ul>
-                    <li><strong>a.</strong> Click the button.</li>
-                    <li><strong>b.</strong> The camera continuously captures pictures.</li>
-                    <li><strong>c.</strong> The microcontroller and the software analyze the pictures.</li>
-                    <li><strong>d.</strong> Objects are detected, and the speaker announces the result.</li>
-                </ul>
-                <p>Note: This mode is ideal for users on the move. It provides real-time feedback about the user's surroundings.</p>
-            </div>
-        </div>
-
-        <!-- Vision Assist Mode -->
-        <div class="card my-4">
-            <div class="card-header">
-                <h2><i class="fas fa-user-friends"></i> 3. Vision Assist Mode:</h2>
-            </div>
-            <div class="card-body">
-                <p>This mode connects the user with a human assistant for immediate help.</p>
-                <ul>
-                    <li><strong>a.</strong> Click the button.</li>
-                    <li><strong>b.</strong> A video call will be established between the vision-impaired individual and their chosen caretaker.</li>
-                    <li><strong>c.</strong> The user can communicate with their caretaker using the built-in microphone to receive guidance.</li>
-                </ul>
-                <p>Note: This mode is designed for users who require human assistance in unfamiliar or complex environments.</p>
-            </div>
-        </div>
+  <!-- Insight Snap Mode -->
+  <div class="card my-4">
+    <div class="card-header">
+      <h2><i class="fas fa-camera"></i> 1. Insight Snap Mode:</h2>
     </div>
+    <div class="card-body">
+      <p>
+        This mode is designed to quickly identify objects in front of the user.
+      </p>
+      <ul>
+        <li><strong>a.</strong> Click the button.</li>
+        <li><strong>b.</strong> The camera takes pictures.</li>
+        <li>
+          <strong>c.</strong> The microcontroller and the software analyze the
+          picture.
+        </li>
+        <li>
+          <strong>d.</strong> Objects are detected, and the speaker announces
+          the result.
+        </li>
+      </ul>
+      <p>
+        Note: This mode is best suited for stationary users who wish to identify
+        objects in their immediate surroundings.
+      </p>
+    </div>
+  </div>
+
+  <!-- Eyes-On Mode -->
+  <div class="card my-4">
+    <div class="card-header">
+      <h2><i class="fas fa-eye"></i> 2. Eyes-On Mode:</h2>
+    </div>
+    <div class="card-body">
+      <p>This mode provides continuous visual feedback to the user.</p>
+      <ul>
+        <li><strong>a.</strong> Click the button.</li>
+        <li><strong>b.</strong> The camera continuously captures pictures.</li>
+        <li>
+          <strong>c.</strong> The microcontroller and the software analyze the
+          pictures.
+        </li>
+        <li>
+          <strong>d.</strong> Objects are detected, and the speaker announces
+          the result.
+        </li>
+      </ul>
+      <p>
+        Note: This mode is ideal for users on the move. It provides real-time
+        feedback about the user's surroundings.
+      </p>
+    </div>
+  </div>
+
+  <!-- Vision Assist Mode -->
+  <div class="card my-4">
+    <div class="card-header">
+      <h2>
+        <i class="fas fa-user-friends"></i> 3. Vision Assist Mode: (Coming
+        Soon!)
+      </h2>
+    </div>
+    <div class="card-body">
+      <p>
+        This mode connects the user with a human assistant for immediate help.
+      </p>
+      <ul>
+        <li><strong>a.</strong> Click the button.</li>
+        <li>
+          <strong>b.</strong> A video call will be established between the
+          vision-impaired individual and their chosen caretaker.
+        </li>
+        <li>
+          <strong>c.</strong> The user can communicate with their caretaker
+          using the built-in microphone to receive guidance.
+        </li>
+      </ul>
+      <p>
+        Note: This mode is designed for users who require human assistance in
+        unfamiliar or complex environments.
+      </p>
+    </div>
+  </div>
+</div>
 {% endblock %}
