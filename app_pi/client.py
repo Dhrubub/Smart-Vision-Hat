@@ -19,7 +19,10 @@ from collections import Counter
 import pyrebase
 from gpiozero import Button
 
-
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 subprocess.call(['espeak', '-s', '150', "Welcome to smart vision hat"])
 
@@ -42,10 +45,11 @@ device_id = "b8:27:eb:a8:66:d1"
 
 button2 = Button(2)
 button3 = Button(3)
-# button4 = Button(18)
+button4 = Button(18)
 
 button2_state = False
 button3_state = False
+button4_state = False
 
 eyes_on_mode = False
 interval = 20
@@ -245,7 +249,17 @@ def capture_image():
         START = time()
         sleep(interval)
         
-
+def send_email():
+    sg = SendGridAPIClient('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')
+    email = Mail(
+        from_email='mlfdb2023@gmail.com',
+        to_emails='cxw8848@hotmail.com', #'smartvisionhat@gmail.com',
+        subject='Emergency Alert from Smart Vision Hat',
+        html_content='<strong>You have a new alert from your contact \n sent by Smart Vision Hat</strong>'
+    )
+    response = sg.send(email)
+    print(response.status_code)
+    
 ready = False
 if __name__ == '__main__':
     while True:
@@ -268,8 +282,8 @@ if __name__ == '__main__':
         if button3.is_pressed and not button3_state:
             button3_state = True
 
-        # if button4.is_pressed and not button4_state:
-        #     button4_state = True
+        if button4.is_pressed and not button4_state:
+            button4_state = True
 
         if button2.is_pressed == False and button2_state and not eyes_on_mode:
         # if key == ord('c') and not eyes_on_mode:
@@ -285,7 +299,9 @@ if __name__ == '__main__':
                 image_capture_thread = threading.Thread(target=capture_image)
                 image_capture_thread.start()
 
-        # if button4.is_pressed == False and button4_state:
+        if button4.is_pressed == False and button4_state:
+            send_email()
+            
         # if key == ord('e'):
         #     try:
         #         payload = {
