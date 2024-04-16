@@ -1,96 +1,100 @@
 {% extends "components/base.html" %} {% block extra_css %}
 <style>
-	.detected-image {
-		max-width: 200px !important;
-		cursor: pointer;
-	}
-
-	.label-tag {
-		background-color: #007bff;
-		color: #fff;
-		border-radius: 0.2rem;
-		padding: 0.2rem 0.5rem;
-		margin: 0.2rem;
-		display: inline-block;
-	}
+  .detected-image {
+    max-width: 200px !important;
+    cursor: pointer;
+  }
+  .label-tag {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    margin: 0.2rem;
+    display: inline-block;
+  }
 </style>
 {% endblock %} {% block content %}
 <div class="container mt-4" id="page-wrapper">
-	<h1 class="text-center">System Log</h1>
+  <h1 class="text-center">System Log</h1>
+  <!-- Centered title -->
 
-	{% if detected_images|length > 0 %}
-	<div class="d-flex justify-content-center mt-4">
-		<table class="table table-bordered table-striped">
-			<thead>
-				<tr>
-					<th>Captured Image</th>
-					<th>Recognized Object(s)</th>
-					<th>Data</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for detected_image in detected_images %}
-				<tr>
-					<td>
-						<img
-							src="{{ detected_image.imageURL }}"
-							alt="Detected Image"
-							class="img-fluid detected-image"
-							onclick="openImageInNewWindow('{{ detected_image.imageURL }}')"
-						/>
-					</td>
+  {% if detected_images|length > 0 %}
+  <div class="d-flex justify-content-center mt-4">
+    <div class="table-responsive">
+      <!-- Responsive table -->
+      <table class="table table-bordered table-striped">
+        <!-- Table content -->
+        <thead>
+          <tr>
+            <th>Captured Image</th>
+            <th>Recognized Object(s)</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detected_image in detected_images %}
+          <tr>
+            <td>
+              <img
+                src="{{ detected_image.imageURL }}"
+                alt="Detected Image"
+                class="img-fluid detected-image"
+                onclick="openImageInNewWindow('{{ detected_image.imageURL }}')"
+              />
+            </td>
 
-					<td style="display: flex; border: none">
-						{% if detected_image.labels %} {% for key, value in
-						detected_image.labels.items() %}
-						<span class="bg-primary text-white rounded-2 p-2 m-1"
-							>{{value}} {{key}}{% if value > 1 %}s{% endif %}
-						</span>
-						{% endfor %} {% else %}
-						<!-- Default content for when detected_image.labels is None -->
-						<span class="bg-secondary text-white rounded-2 p-2 m-1"
-							>None</span
-						>
-						{% endif %}
-					</td>
-					<td>
-						{% if detected_image.timestamp %}
-						<p
-							class="bg-info text-white rounded-2 p-2 m-1"
-							style="width: fit-content"
-						>
-							{{detected_image.timestamp}}
-						</p>
-						<p
-							class="bg-info text-white rounded-2 p-2 m-1"
-							style="width: fit-content"
-						>
-							{{detected_image.mode}}
-						</p>
-						<p
-							class="bg-info text-white rounded-2 p-2 m-1"
-							style="width: fit-content"
-						>
-							{{detected_image.processing_location}}
-						</p>
-						{% endif %}
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
-	{% else %}
-	<div class="d-flex justify-content-center mt-4">
-		<p>No images found in the system log.</p>
-	</div>
-	{% endif %}
+            <td style="display: flex; border: none">
+              {% if detected_image.labels %} {% for key, value in
+              detected_image.labels.items() %}
+              <span class="bg-primary text-white rounded-2 p-2 m-1"
+                >{{value}} {{key}}{% if value > 1 %}s{% endif %}
+              </span>
+              {% endfor %} {% else %}
+              <!-- Default content for when detected_image.labels is None -->
+              <span class="bg-secondary text-white rounded-2 p-2 m-1"
+                >None</span
+              >
+              {% endif %}
+            </td>
+            <td>
+              {% if detected_image.timestamp %}
+              <p
+                class="bg-info text-white rounded-2 p-2 m-1"
+                style="width: fit-content"
+              >
+                {{detected_image.timestamp}}
+              </p>
+              <p
+                class="bg-info text-white rounded-2 p-2 m-1"
+                style="width: fit-content"
+              >
+                {{detected_image.mode}}
+              </p>
+              <p
+                class="bg-info text-white rounded-2 p-2 m-1"
+                style="width: fit-content"
+              >
+                {{detected_image.processing_location}}
+              </p>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="d-flex justify-content-center mt-4">
+    <p>No images found in the system log.</p>
+  </div>
+  {% endif %}
 </div>
 
 <script>
-	function openImageInNewWindow(imageUrl) {
-		// Open the image URL in a new window or tab
-		window.open(imageUrl);
-	}
+  function openImageInNewWindow(imageUrl) {
+    // Open the image URL in a new window or tab
+    window.open(imageUrl);
+  }
 </script>
 {% endblock %}
