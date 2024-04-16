@@ -11,8 +11,9 @@ def send_email():
         from_email='mlfdb2023@gmail.com',
         to_emails='cxw8848@hotmail.com', #'smartvisionhat@gmail.com',
         subject='Emergency Alert from Smart Vision Hat',
-        html_content='<strong>You have a new alert from your contact:' + user + 'Smart Vision Hat</strong>'
+        html_content='<strong>You have a new alert from your contact \n by Smart Vision Hat</strong>'
     )
     response = sg.send(email)
     print(response.status_code)
 
+send_email()
